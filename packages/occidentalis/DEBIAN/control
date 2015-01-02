@@ -1,0 +1,10 @@
+Package: occidentalis
+Version: 0.3.1
+Section: base
+Priority: optional
+Architecture: armhf
+Depends: avahi-daemon (>= 0.6.31), netatalk (>= 2.2.2)
+Maintainer: Todd Treece <todd@uniontownlabs.org>
+Description: Occidentalis
+  A collection of packages and utilities brought to you
+  by Adafruit that make it easier for you to use your Raspberry Pi.
