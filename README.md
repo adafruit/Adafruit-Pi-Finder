@@ -1,4 +1,4 @@
-# Raspberry Pi Boostrap
+# Raspberry Pi Bootstrap
 
 The goal of this project is to make a version of [Occidentalis][1] that
 is distributed as a Debian package instead of an image.
