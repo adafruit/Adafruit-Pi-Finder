@@ -1,9 +1,9 @@
 Package: occidentalis
-Version: 0.3.1
+Version: 0.3.2
 Section: base
 Priority: optional
 Architecture: armhf
-Depends: avahi-daemon (>= 0.6.31), netatalk (>= 2.2.2)
+Depends: avahi-daemon (>= 0.6.31), netatalk (>= 2.2.2), node (>= 0.10.35)
 Maintainer: Todd Treece <todd@uniontownlabs.org>
 Description: Occidentalis
   A collection of packages and utilities brought to you
