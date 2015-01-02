@@ -77,4 +77,4 @@ fi
 printf "\nAttempting to connect to the Raspberry Pi found @ $IP\n"
 printf "Please enter the default password of ${BOLD}raspberry${NORMAL} when prompted.\n"
 
-ssh -t pi@$IP 'curl -SLs https://uniontownlabs.org/bootstrap/install | sudo bash'
+ssh -t pi@$IP 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash'
