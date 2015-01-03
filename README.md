@@ -8,7 +8,7 @@ is distributed as a Debian package instead of an image.
 On *nix based systems:
 
 ```sh
-$ curl -SLs https://uniontownlabs.org/bootstrap | bash
+$ curl -SLs http://bootstrap.uniontownlabs.org | bash
 ```
 
 Windows:
