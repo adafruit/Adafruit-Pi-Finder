@@ -1,0 +1,21 @@
+{
+  "name": "pi_finder",
+  "version": "1.0.0",
+  "description": "An atom-shell based utility for finding Raspberry Pis on the local network",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adafruit/pi_bootstrap"
+  },
+  "author": "Todd Treece <todd@uniontownlabs.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adafruit/pi_bootstrap/issues"
+  },
+  "homepage": "https://github.com/adafruit/pi_bootstrap",
+  "dependencies": {
+    "node-arp": "^1.0.5",
+    "ping": "^0.1.9",
+    "sequest": "^0.7.0"
+  }
+}
