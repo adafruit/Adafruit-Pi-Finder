@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Raspbery Pi Bootstrap</title>
+    <style>
+      #start {
+        box-sizing: border-box;
+        color: rgb(255, 255, 255);
+        display: block;
+        height: 29px;
+        text-decoration: none;
+        width: 102px;
+        perspective-origin: 51px 14.5px;
+        transform-origin: 51px 14.5px;
+        background: rgb(0, 172, 236) none repeat scroll 0% 0% / auto padding-box border-box;
+        border: 0px none rgb(255, 255, 255);
+        font: normal normal 300 normal 12px/17.142858505249px 'Gotham SSm A', 'Gotham SSm B';
+        margin: 0px auto;
+        outline: rgb(255, 255, 255) none 0px;
+        padding: 6px 10px;
+      }
+    </style>
+    <script src="/jquery.js"></script>
+  </head>
+  <body>
+    <a id="start">Find My Pi!</a>
+    <script>
+
+      var ipc = require('ipc');
+
+      ipc.on('found', function(arg) {
+        document.write(arg);
+      });
+
+    </script>
+  </body>
+</html>
