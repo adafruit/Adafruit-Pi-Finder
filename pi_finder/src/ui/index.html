@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Raspbery Pi Bootstrap</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <img src="adafruit.svg">
+    <a id="show_options">--- Options ---</a>
+    <div id="options" class="hide">
+      <label>Hostname:</label>
+      <input name="hostname" value="raspberrypi">
+      <label>SSH User:</label>
+      <input name="ssh_user" value="pi">
+      <label>SSH Password</label>
+      <input name="ssh_pass" value="raspberry">
+      <label>WiFi SSID:</label>
+      <input name="wifi_ssid" placeholder="ssid">
+      <label>WiFi Password</label>
+      <input name="wifi_pass" placeholder="******">
+    </div>
+
+    <a id="start">Find My Pi!</a>
+
+    <div id="status"></div>
+    <a id="show_terminal" class="hide"></a>
+
+    <script>
+
+      var ipc = require('ipc');
+      window.$ = window.jQuery = require('./jquery.js');
+
+      $(document).on('ready', function() {
+
+        $('#start').click(function() {
+          $('#show_options, #options').addClass('hide');
+          $('img').addClass('spin');
+          $(this).hide();
+          ipc.send('find', get_options());
+        });
+
+        $('#show_options').click(function() {
+          $(this).hide();
+          $('#options').removeClass('hide');
+          ipc.send('options', true);
+        });
+
+      });
+
+      ipc.on('found', function(arg) {
+        $('#status').html(arg);
+      });
+
+      ipc.on('bootstrap', function(arg) {
+        $('#status').html(arg);
+        $('img').removeClass('spin');
+      });
+
+      ipc.on('status', function(arg) {
+        $('#status').html(arg);
+      });
+
+      function get_options() {
+
+        var options = {};
+
+        $('#options input').each(function() {
+
+          if($(this).val() === '') {
+            return;
+          }
+
+          options[$(this).attr('name')] = $(this).val();
+
+        });
+
+        return options;
+
+      }
+
+    </script>
+  </body>
+</html>

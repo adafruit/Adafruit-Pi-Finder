@@ -5,6 +5,9 @@ var app = require('app'),
     Finder = require('./finder.js'),
     main;
 
+// Report crashes to our server.
+require('crash-reporter').start();
+
 // quit app on close
 app.on('window-all-closed', function() {
   app.quit();
@@ -13,13 +16,21 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
 
   // create the main window
-  main = new BrowserWindow({width: 250, height: 350});
+  main = new BrowserWindow({
+    width: 250,
+    height: 350,
+    resizable: false
+  });
 
   // load index.html
-  main.loadUrl('file://' + __dirname + '/index.html');
+  main.loadUrl('file://' + __dirname + '/ui/index.html');
 
   main.on('closed', function() {
     main = null;
+  });
+
+  ipc.on('options', function(e, arg) {
+    main.setSize(250, 560);
   });
 
   ipc.on('find', function(e, arg) {
@@ -31,12 +42,13 @@ app.on('ready', function() {
       e.sender.send('found', 'Found Pi at: ' + ip + '!<br>Starting Bootstrap.');
 
       var options = {
-        password: 'raspberry',
+        password: arg.ssh_pass || 'raspberry',
         command: 'uptime'
       };
 
-      sequest('pi@' + ip, options, function(err, stdout) {
-        if (err) throw err;
+      var user = arg.ssh_user || 'pi';
+
+      sequest(user + '@' + ip, options, function(err, stdout) {
         e.sender.send('bootstrap', 'Bootstrap successful!<br>' + stdout.split('\n').join('<br>'));
       });
 
