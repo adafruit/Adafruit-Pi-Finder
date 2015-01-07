@@ -1,12 +1,9 @@
 var app = require('app'),
     ipc = require('ipc'),
-    sequest = require('sequest'),
+    SSH = require('ssh2'),
     BrowserWindow = require('browser-window'),
     Finder = require('./finder.js'),
-    main;
-
-// Report crashes to our server.
-require('crash-reporter').start();
+    main, terminal;
 
 // quit app on close
 app.on('window-all-closed', function() {
@@ -15,15 +12,22 @@ app.on('window-all-closed', function() {
 
 app.on('ready', function() {
 
-  // create the main window
   main = new BrowserWindow({
     width: 250,
-    height: 350,
+    height: 360,
     resizable: false
   });
 
-  // load index.html
-  main.loadUrl('file://' + __dirname + '/ui/index.html');
+  terminal = new BrowserWindow({
+    'always-on-top': true,
+    width: 600,
+    height: 400,
+    resizable: false,
+    show: false
+  });
+
+  main.loadUrl('file://' + __dirname + '/ui/main.html');
+  terminal.loadUrl('file://' + __dirname + '/ui/terminal.html');
 
   main.on('closed', function() {
     main = null;
@@ -33,23 +37,63 @@ app.on('ready', function() {
     main.setSize(250, 560);
   });
 
+  ipc.on('show_terminal', function(e, arg) {
+    terminal.show();
+  });
+
   ipc.on('find', function(e, arg) {
 
     var finder = Finder();
+
+    main.setSize(250, 360);
 
     finder.start(function(err, ip) {
 
       e.sender.send('found', 'Found Pi at: ' + ip + '!<br>Starting Bootstrap.');
 
       var options = {
+        username: arg.ssh_user || 'pi',
         password: arg.ssh_pass || 'raspberry',
-        command: 'uptime'
+        host: ip,
+        port: 22
       };
 
-      var user = arg.ssh_user || 'pi';
+      var command = 'curl -SL http://bootstrap.uniontownlabs.org/install';
 
-      sequest(user + '@' + ip, options, function(err, stdout) {
-        e.sender.send('bootstrap', 'Bootstrap successful!<br>' + stdout.split('\n').join('<br>'));
+      var ssh = new SSH();
+
+      ssh.on('ready', function() {
+
+        ssh.exec(command, function(err, stream) {
+
+          if(err) {
+            return terminal.webContents.send('stderr', err.toString());
+          }
+
+          stream.on('error', function(err) {
+            terminal.webContents.send('stderr', err.toString());
+          });
+
+          stream.on('close', function() {
+            e.sender.send('bootstrap', 'Bootstrap successful!<br>');
+            ssh.end();
+          }).on('data', function(data) {
+            e.sender.send('status', 'Bootstrapping...');
+            terminal.webContents.send('stdout', data.toString());
+          }).stderr.on('data', function(data) {
+            terminal.webContents.send('stderr', data.toString());
+          });
+        });
+
+      });
+
+      setTimeout(function() {
+        ssh.connect(options);
+      }, 1000);
+
+      ssh.on('error', function() {
+        e.sender.send('bootstrap', 'Bootstrap failed.<br>Connection error :(');
+        terminal.webContents.send('stderr', 'SSH connection failed');
       });
 
     });
