@@ -44,7 +44,7 @@ cat << "EOF"
                                                    .+hmmy`
 
 
-                        occidentalis installer
+                        occidentalis bootstrap
                              by adafruit
 
 
