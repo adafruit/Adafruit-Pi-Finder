@@ -49,6 +49,18 @@ img {
   color: #fff;
 }
 
+#show_terminal {
+  font-size: 12px;
+  margin-top: 10px;
+  display: block;
+  cursor: pointer;
+  color: #ddd;
+}
+
+#show_terminal:hover {
+  color: #fff;
+}
+
 .hide {
   display: none !important;
 }
@@ -57,6 +69,17 @@ img {
   display: block;
   width: 140px;
   margin: 0 auto 20px auto;
+}
+
+#terminal {
+  text-align: left;
+  width: 100%;
+  color: #00CC00;
+  font-size: 12px;
+}
+
+#terminal span.error {
+  color: #EE0000;
 }
 
 label {

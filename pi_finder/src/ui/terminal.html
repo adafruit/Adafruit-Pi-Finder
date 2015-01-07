@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Raspbery Pi Bootstrap</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+
+  <body>
+
+    <pre id="terminal"></pre>
+
+    <script>
+
+      var ipc = require('ipc');
+      window.$ = window.jQuery = require('./jquery.js');
+
+      ipc.on('stdout', function(arg) {
+        $('#terminal').append(arg);
+      });
+
+      ipc.on('stderr', function(arg) {
+        $('#terminal').append('<span class="error">' + arg + '</span>\n');
+      });
+
+      $(document).on('ready', function() {
+        $("#terminal").animate({ scrollTop: $("#terminal")[0].scrollHeight}, 1000);
+      });
+
+    </script>
+
+  </body>
+
+</html>
