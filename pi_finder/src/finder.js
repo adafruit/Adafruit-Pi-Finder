@@ -1,8 +1,12 @@
 var ip = require('ip'),
+    events = require('events'),
     util = require('util'),
-    ping = require('ping'),
+    ping = require('./ping.js'),
     async = require('async'),
-    arp = require('arp-a');
+    arp = require('./arp.js');
+
+/**** Finder is an event emitter ****/
+util.inherits(Finder, events.EventEmitter);
 
 /**** Finder prototype ****/
 var proto = Finder.prototype;
@@ -16,6 +20,8 @@ function Finder(options) {
   if (!(this instanceof Finder)) {
     return new Finder(options);
   }
+
+  events.EventEmitter.call(this);
 
   util._extend(this, options || {});
 
@@ -45,7 +51,9 @@ proto.ping = function(next) {
 
   var host = this.subnet + '.' + this.position;
 
-  ping.sys.probe(host, function(){
+  this.emit('ip', host);
+
+  ping(host, function(){
 
     this.position++;
 
@@ -53,28 +61,25 @@ proto.ping = function(next) {
       this.position = 1;
     }
 
-    this.arp(next);
+    this.arp(host, next);
 
   }.bind(this));
 
 };
 
-proto.arp = function(next) {
+proto.arp = function(host, next) {
 
-  arp.table(function(err, entry) {
+  arp(host, function(err, mac) {
 
-    if (err) {
-      return next(err);
-    }
-
-    if (!entry) {
+    if (err || !mac) {
       return next();
     }
 
-    if(/b8:27:eb/.test(entry.mac)) {
-      this.pi = entry.ip;
-      next();
+    if(/b8:27:eb/.test(mac)) {
+      this.pi = host;
     }
+
+    next();
 
   }.bind(this));
 

@@ -3,33 +3,86 @@
   <head>
     <title>Raspbery Pi Bootstrap</title>
     <style>
+
+      body {
+        background: #000;
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      img {
+        display: block;
+        width: 200px;
+        margin: 30px auto;
+      }
+
       #start {
+        text-align: center;
         box-sizing: border-box;
-        color: rgb(255, 255, 255);
+        color: #fff;
         display: block;
         height: 29px;
         text-decoration: none;
-        width: 102px;
+        width: 140px;
         perspective-origin: 51px 14.5px;
         transform-origin: 51px 14.5px;
-        background: rgb(0, 172, 236) none repeat scroll 0% 0% / auto padding-box border-box;
+        background: rgb(0, 172, 236);
         border: 0px none rgb(255, 255, 255);
-        font: normal normal 300 normal 12px/17.142858505249px 'Gotham SSm A', 'Gotham SSm B';
+        font-size: 16px;
         margin: 0px auto;
         outline: rgb(255, 255, 255) none 0px;
         padding: 6px 10px;
+        cursor: pointer;
       }
+
+      #status {
+        display: block;
+        color: #fff;
+        text-align: center;
+        width: 90%;
+        margin: 20px auto 0 auto;
+        font-size: 12px;
+      }
+
+      .spin {
+        animation:spin 4s linear infinite;
+        -webkit-animation:spin 4s linear infinite;
+      }
+
+      @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+      @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
     </style>
-    <script src="/jquery.js"></script>
   </head>
   <body>
+    <img src="adafruit.svg">
     <a id="start">Find My Pi!</a>
+    <div id="status"></div>
     <script>
 
       var ipc = require('ipc');
+      window.$ = window.jQuery = require('./jquery.js');
+
+      $(document).on('ready', function() {
+
+        $('#start').click(function() {
+          $('img').addClass('spin');
+          $(this).hide();
+          ipc.send('find', '');
+        });
+
+      });
 
       ipc.on('found', function(arg) {
-        document.write(arg);
+        $('#status').html(arg);
+      });
+
+      ipc.on('bootstrap', function(arg) {
+        $('#status').html(arg);
+        $('img').removeClass('spin');
+      });
+
+      ipc.on('status', function(arg) {
+        $('#status').html(arg);
       });
 
     </script>
