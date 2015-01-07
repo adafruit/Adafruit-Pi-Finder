@@ -14,11 +14,10 @@
   },
   "homepage": "https://github.com/adafruit/pi_bootstrap",
   "dependencies": {
+    "arp-a": "^0.4.2",
     "async": "^0.9.0",
     "ip": "^0.3.2",
     "mac-lookup": "0.0.3",
-    "netstat": "0.0.2",
-    "node-arp": "^1.0.5",
     "ping": "^0.1.9",
     "sequest": "^0.7.0"
   }
