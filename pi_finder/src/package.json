@@ -17,5 +17,11 @@
     "async": "^0.9.0",
     "ip": "^0.3.2",
     "ssh2": "^0.3.6"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-atom-shell-app-builder": "0.0.7",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-rename": "^0.1.4"
   }
 }
