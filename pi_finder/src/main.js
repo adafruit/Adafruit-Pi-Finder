@@ -89,7 +89,7 @@ app.on('ready', function() {
 
       setTimeout(function() {
         ssh.connect(options);
-      }, 1000);
+      }, 2000);
 
       ssh.on('error', function() {
         e.sender.send('bootstrap', 'Bootstrap failed.<br>Connection error :(');
