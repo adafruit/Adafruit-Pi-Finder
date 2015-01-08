@@ -1,53 +1,37 @@
 #!/usr/bin/env bash
 
 cat << "EOF"
-
-
-
-
-                                         .ydd+`
-                                        +NMMMMy`
-                                      .hMMMMMMM+
-                                     +NMMMMMMMMN-
-                                   .hMMMMMMMMMMMd`
-                                  /NMMMMMMMMMMMMM+
-                                `sMMMMMMMMMMMMMMMN.
-                               .dMMMMMMMMMMMMMMMMMy
-                              `dMMMMMMMMMMMMMMMMMMN-
-    `............--...`       /MMMMMMMMMMMMMMMMMMMMo
-  `omMMMMMMMMMMMMMMMMMNNdy+.  +MMMMMMMMMMMMMMMMMMMMo
-  `dMMMMMMMMMMMMMMMMMMMMMMMMd+/MMMMMMMMMMMMMMMMMMMM/
-   .yMMMMMMMMMMMMMMMMMMMMMMMMMNMMMMMMMMNdMMMMMMMMMd```.---..`
-     /NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy``oMMMMMMMMyhmNMMMMMMNmhs+:`
-      .hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd`  :NMMMMMMMMMMMMMMMMMMMMMMMMNdy+:.`
-       `+NMMMMMMMMMMMMMMMMMMMMMMMMMMM+   oMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNds.
-         .dMMMMMMMMMMMMMMN-..:+yNMMMMs  :NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`
-          `oNMMMMMMMMMMMMMh:`   `+mMMMhyNMMMMNmdddmMMMMMMMMMMMMMMMMMMMMMMMMd:
-            .yNMMMMMMMMMMMMMmy+:..sMMMMMMMNo.      oMMMMMMMMMMMMMMMMMMMMms-
-              `+dNMMMMMMMMMMMMMMMMMMMMMMMMdo-`-/ohmMMMMMMMMMMMMMMMMMMNy:`
-                 `:+smMMMMMMMMMMMmhmMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMNh/`
-                  .omMMMMMMMMMm+.  +MMMy-+mMMMMMMMMMMMMMMMMMMMMMd+.
-                .yNMMMMMMMMMNo`  `+NMMMo  `oMMMMMMMMMMMMMMMNmy+.
-               :NMMMMMMMMMMN+  `+mMMMMMN-   oMMMMMMMMh:---.`
-              :MMMMMMMMMMMMMhshMMMMMMMMMN/`  NMMMMMMMMN:
-             .mMMMMMMMMMMMMMMMMMMMMMMMMMMMdosMMMMMMMMMMN:
-             yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd`
-            /MMMMMMMMMMMMMMMMMMMMMMdNMMMMMMMMMMMMMMMMMMMM-
-           .mMMMMMMMMMMMMMMMMMMMMMs`mMMMMMMMMMMMMMMMMMMMM+
-           yMMMMMMMMMMMMMMMMMMMMh:  :NMMMMMMMMMMMMMMMMMMMo
-          :NMMMMMMMMMMMMMMMMNdo.     /mMMMMMMMMMMMMMMMMMMo
-          dMMMMMMMMMMMMNdy+:`         .sNMMMMMMMMMMMMMMMMo
-          dMMMMMNmds+-`                 `+hMMMMMMMMMMMMMMo
-          `/++/-.                          -omMMMMMMMMMMMo
-                                              :yNMMMMMMMMo
-                                                `/hNMMMMM+
-                                                   .+hmmy`
-
-
-                        occidentalis bootstrap
-                             by adafruit
-
-
+                                 .`
+                              -dMMs
+                             +MMMMMo
+                           .dMMMMMMN-
+                          +NMMMMMMMMd`
+                        `hMMMMMMMMMMMo
+                       -mMMMMMMMMMMMMN.
+                       dMMMMMMMMMMMMMMo
+  :hmmmmmmmmmmmmdhs/. `MMMMMMMMMMMMMMMh
+  sMMMMMMMMMMMMMMMMMMd+NMMMMMMMMMMMMMM+
+   /NMMMMMMMMMMMMMMMMMMMMMMMMs+NMMMMMm/+syyyso/-`
+    `hMMMMMMMMMMMMMMMMMMMMMMo  hMMMMMMMMMMMMMMMMMNhs+:.
+      /NMMMMMMMMMMMNmmNMMMMN. `mMMMMMMMMMMMMMMMMMMMMMMMNh-
+       .hMMMMMMMMMMh` `-sNMMs-hMMMMMMMMMMMMMMMMMMMMMMMMMM+
+         /mMMMMMMMMMNy+-./MMMMMMy:....oMMMMMMMMMMMMMMMNo.
+           :ymMMMMMMMMMMMMMMMMMNy//oymMMMMMMMMMMMMMNy:
+              .yMMMMMMMms:oMMNhNMMMMMMMMMMMMMMMMNh/`
+            .yMMMMMMMN/  .dMMy `sMMMMMMMMMMMNmy/`
+           /NMMMMMMMM:`-sMMMMM:  sMMMMMMs-..`
+          -NMMMMMMMMMNNMMMMMMMMs./MMMMMMMh`
+          mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMs
+         sMMMMMMMMMMMMMMMMhMMMMMMMMMMMMMMMN
+        :MMMMMMMMMMMMMMMN+ hMMMMMMMMMMMMMMN.
+       `dMMMMMMMMMMMMNh/`  `hMMMMMMMMMMMMMN.
+       /MMMMMMMMmhs+-        /dMMMMMMMMMMMN.
+       .hmdys/-                -sNMMMMMMMMN.
+                                 `:hNMMMMMN.
+                                    `+dMMMN`
+                                       ./+-
+               occidentalis bootstrap
+                    by adafruit
 
 EOF
 
