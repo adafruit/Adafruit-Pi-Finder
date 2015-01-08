@@ -26,19 +26,28 @@ module.exports = function(grunt) {
         dest: '../build/linux_64'
       }
     },
+    asar: {
+      build: {
+        files: {
+          'build/occidentalis.asar': ['./'],
+        }
+      }
+    },
     clean: {
       options: {
         force: true
       },
       build: ['../build/darwin', '../build/win32', '../build/linux32', '../build/linux64'],
-      all: ['../build/*']
+      all: ['../build/*', './build'],
+      asar: ['./build']
     }
   });
 
   grunt.loadNpmTasks('grunt-atom-shell-app-builder');
   grunt.loadNpmTasks('grunt-rename');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-asar');
 
-  grunt.registerTask('default', [ 'clean:all', 'build-atom-shell-app', 'rename', 'clean:build']);
+  grunt.registerTask('default', [ 'clean:all', 'asar', 'build-atom-shell-app', 'rename', 'clean:build', 'clean:asar']);
 
 };
