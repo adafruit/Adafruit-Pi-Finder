@@ -33,6 +33,10 @@ app.on('ready', function() {
     main = null;
   });
 
+  terminal.on('closed', function() {
+    terminal = null;
+  });
+
   ipc.on('options', function(e, arg) {
     main.setSize(250, 560);
   });
@@ -76,6 +80,13 @@ app.on('ready', function() {
 
           stream.on('close', function() {
             e.sender.send('bootstrap', 'Bootstrap successful!<br>');
+
+            if(terminal) {
+              terminal.close();
+              main.center();
+              main.focus();
+            }
+
             ssh.end();
           }).on('data', function(data) {
             e.sender.send('status', 'Bootstrapping...');

@@ -46,6 +46,7 @@
         });
 
         $('#show_terminal').click(function() {
+          $(this).hide(true);
           ipc.send('show_terminal', true);
         });
 
