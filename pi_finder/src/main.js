@@ -30,7 +30,7 @@ app.on('ready', function() {
   terminal.loadUrl('file://' + __dirname + '/ui/terminal.html');
 
   main.on('closed', function() {
-    main = null;
+    app.quit();
   });
 
   terminal.on('closed', function() {
