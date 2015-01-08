@@ -17,14 +17,16 @@
 
       ipc.on('stdout', function(arg) {
         $('#terminal').append(arg);
+        $('html, body').animate({ scrollTop: $(document).height() }, 0);
       });
 
       ipc.on('stderr', function(arg) {
-        $('#terminal').append('<span class="error">' + arg + '</span>\n');
+        //$('#terminal').append('<span class="error">' + arg + '</span>\n');
+        $('html, body').animate({ scrollTop: $(document).height() }, 0);
       });
 
       $(document).on('ready', function() {
-        $("#terminal").animate({ scrollTop: $("#terminal")[0].scrollHeight}, 1000);
+        $('html, body').animate({ scrollTop: $(document).height() }, 0);
       });
 
     </script>

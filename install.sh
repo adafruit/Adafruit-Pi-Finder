@@ -51,6 +51,8 @@ cat << "EOF"
 
 EOF
 
+sleep 2
+
 if grep -Fq "uniontown" /etc/apt/sources.list; then
   echo "repo already added to apt sources"
 else

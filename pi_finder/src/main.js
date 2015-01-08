@@ -58,7 +58,7 @@ app.on('ready', function() {
         port: 22
       };
 
-      var command = 'curl -SL http://bootstrap.uniontownlabs.org/install';
+      var command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
 
       var ssh = new SSH();
 
