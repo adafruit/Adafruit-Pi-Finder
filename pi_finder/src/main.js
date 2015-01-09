@@ -57,6 +57,10 @@ app.on('ready', function() {
 
     main.setSize(250, 360);
 
+    finder.on('ip', function(ip) {
+      e.sender.send('status', 'Trying IP: ' + ip + '...');
+    });
+
     finder.start(function(err, ip) {
 
       e.sender.send('found', 'Found Pi at: ' + ip + '!<br>Starting Bootstrap.');
@@ -113,10 +117,6 @@ app.on('ready', function() {
         terminal.webContents.send('stderr', err.toString());
       });
 
-    });
-
-    finder.on('ip', function(ip) {
-      e.sender.send('status', 'Trying IP: ' + ip + '...');
     });
 
   });

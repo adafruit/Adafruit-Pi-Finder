@@ -34,32 +34,24 @@ function Finder(options) {
 
 proto.ip = false;
 proto.subnet = false;
-proto.position = 1;
-proto.pi = false;
 
 proto.start = function(cb) {
 
-  async.doUntil(
+  async.times(
+    255,
     this.ping.bind(this),
-    this.check.bind(this),
     this.finish.bind(this, cb)
   );
 
 };
 
-proto.ping = function(next) {
+proto.ping = function(position, next) {
 
-  var host = this.subnet + '.' + this.position;
+  var host = this.subnet + '.' + position;
 
   this.emit('ip', host);
 
   ping(host, function(){
-
-    this.position++;
-
-    if(this.position >= 254) {
-      this.position = 1;
-    }
 
     this.arp(host, next);
 
@@ -76,7 +68,7 @@ proto.arp = function(host, next) {
     }
 
     if(/b8:27:eb/.test(mac)) {
-      this.pi = host;
+      return next(null, host);
     }
 
     next();
@@ -85,14 +77,26 @@ proto.arp = function(host, next) {
 
 };
 
-proto.check = function() {
+proto.finish = function(cb, err, ips) {
 
-  return this.pi ? true : false;
+  var ip = false;
 
-};
+  if(Array.isArray(ips)) {
 
-proto.finish = function(cb, err) {
+    // loop through ips and check for values
+    ips.forEach(function(i) {
+      if(i) ip = i;
+    });
 
-  cb(err, this.pi);
+  }
+
+  if(ip) {
+    return cb(null, ip);
+  }
+
+  // keep trying
+  setTimeout(function() {
+    this.start(cb);
+  }.bind(this), 1000);
 
 };
