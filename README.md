@@ -5,16 +5,15 @@ is distributed as a Debian package instead of an image.
 
 ## Finding the Pi
 
-On *nix based systems:
+Windows & Mac:
+
+[Download the latest release][2] of the Occidentalis Bootstrap utility.
+
+Linix:
 
 ```sh
 $ curl -SLs http://bootstrap.uniontownlabs.org | bash
 ```
 
-Windows:
-
-```
-???
-```
-
 [1]: https://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-2
+[2]: https://github.com/adafruit/pi_bootstrap/releases/latest
