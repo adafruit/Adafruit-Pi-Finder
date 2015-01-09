@@ -8,46 +8,60 @@ module.exports = function(grunt) {
         app_dir: './'
       }
     },
-    rename: {
-      darwin: {
-        src: '../build/darwin/atom-shell',
-        dest: '../build/mac'
-      },
-      windows: {
-        src: '../build/win32/atom-shell',
-        dest: '../build/windows'
-      },
-      linux32: {
-        src: '../build/linux32/atom-shell',
-        dest: '../build/linux_32'
-      },
-      linux64: {
-        src: '../build/linux64/atom-shell',
-        dest: '../build/linux_64'
-      }
-    },
-    asar: {
-      build: {
-        files: {
-          'build/occidentalis.asar': ['./'],
-        }
-      }
-    },
     clean: {
       options: {
         force: true
       },
-      build: ['../build/darwin', '../build/win32', '../build/linux32', '../build/linux64'],
-      all: ['../build/*', './build'],
-      asar: ['./build']
+      all: ['../build', '*.zip', '*.tar']
+    },
+    compress: {
+      mac: {
+        options: {
+          archive: 'mac_osx.zip'
+        },
+        expand: true,
+        cwd: '../build/darwin/atom-shell/',
+        src: ['**'],
+        dest: 'occidentalis/'
+      },
+      windows: {
+        options: {
+          archive: 'windows.zip'
+        },
+        expand: true,
+        cwd: '../build/win32/atom-shell/',
+        src: ['**'],
+        dest:'occidentalis/'
+      },
+      linux32: {
+        options: {
+          archive: 'linux_32.tar',
+          mode: 'tar'
+        },
+        expand: true,
+        cwd: '../build/linux32/atom-shell/',
+        src: ['**'],
+        dest:'occidentalis/'
+
+      },
+      linux64: {
+        options: {
+          archive: 'linux_64.tar',
+          mode: 'tar'
+        },
+        expand: true,
+        cwd: '../build/linux64/atom-shell/',
+        src: ['**'],
+        dest:'occidentalis/'
+      }
     }
+
   });
 
   grunt.loadNpmTasks('grunt-atom-shell-app-builder');
-  grunt.loadNpmTasks('grunt-rename');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-asar');
+  grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask('default', [ 'clean:all', 'asar', 'build-atom-shell-app', 'rename', 'clean:build', 'clean:asar']);
+  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'compress']);
 
 };

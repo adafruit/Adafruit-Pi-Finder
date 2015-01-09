@@ -21,7 +21,7 @@
       });
 
       ipc.on('stderr', function(arg) {
-        //$('#terminal').append('<span class="error">' + arg + '</span>\n');
+        $('#terminal').append('<span class="error">' + arg + '</span>\n');
         $('html, body').animate({ scrollTop: $(document).height() }, 0);
       });
 

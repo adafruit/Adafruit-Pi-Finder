@@ -108,9 +108,9 @@ app.on('ready', function() {
         ssh.connect(options);
       }, 2000);
 
-      ssh.on('error', function() {
-        e.sender.send('bootstrap', 'Bootstrap failed.<br>Connection error :(');
-        terminal.webContents.send('stderr', 'SSH connection failed');
+      ssh.on('error', function(err) {
+        e.sender.send('status', 'Error. Please check terminal<br> Attempting to continue.');
+        terminal.webContents.send('stderr', err.toString());
       });
 
     });

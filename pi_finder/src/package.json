@@ -20,9 +20,8 @@
   },
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-asar": "^0.1.4",
     "grunt-atom-shell-app-builder": "0.0.7",
     "grunt-contrib-clean": "^0.6.0",
-    "grunt-rename": "^0.1.4"
+    "grunt-contrib-compress": "^0.13.0"
   }
 }
