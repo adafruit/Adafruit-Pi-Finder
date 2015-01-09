@@ -1,6 +1,6 @@
 {
   "name": "pi_finder",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An atom-shell based utility for finding Raspberry Pis on the local network",
   "main": "main.js",
   "repository": {
