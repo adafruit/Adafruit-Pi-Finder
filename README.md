@@ -9,7 +9,7 @@ Windows & Mac:
 
 [Download the latest release][2] of the Occidentalis Bootstrap utility.
 
-Linix:
+Linux:
 
 ```sh
 $ curl -SLs http://bootstrap.uniontownlabs.org | bash
