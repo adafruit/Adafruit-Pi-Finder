@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+readonly OCCI_CONFIG=/boot/occidentalis.txt
+
+# We'll store configuration values in here.  I was briefly tempted
+# to source the file and use environment variables, but that is probably
+# a Bad Idea.
+
+declare -A config
+
+parse_config() {
+  local IFS="="
+  while read -r key value
+  do
+    printf "\t%s: %s\n" $key $value
+    config[$key]=$value
+  done < $OCCI_CONFIG
+}
+
+main() {
+  echo "Adafruit Occidentalis configuration helper, v0.1.0"
+
+  # Make sure we've actually got a config file to run with.
+  if [ ! -e $OCCI_CONFIG ]; then
+    printf "Couldn't find %s\n" $OCCI_CONFIG
+    exit 64
+  fi
+
+  printf "Reading %s\n" $OCCI_CONFIG
+  parse_config
+
+  # echo ${config[*]}
+}
+
+main "$@"
