@@ -1,0 +1,10 @@
+Package: occi
+Version: 0.1.0
+Section: base
+Priority: optional
+Architecture: armhf
+Depends: perl (>= 5.10.0)
+Maintainer: Brennen Bearnes <bbearnes@gmail.com>
+Description: OCcidentalis Config for raspberry pI
+  A simple utility to apply configuration options from
+  /boot/occidentalis.txt.

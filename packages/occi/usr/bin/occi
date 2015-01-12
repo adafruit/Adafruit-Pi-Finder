@@ -14,6 +14,8 @@ hostname and WiFi credentials to your Raspberry Pi.
 use warnings;
 use strict;
 
+package OcciConfig;
+
 my $OCCI_CONFIG = "/boot/occidentalis.txt";
 my $verbose = 1;
 
@@ -21,34 +23,78 @@ print "Adafruit Occidentalis configuration helper, v0.1.0\n";
 
 my %config = parse_config($OCCI_CONFIG);
 
-foreach my $key (keys %config) {
-  print "$key: $config{$key}\n" if $verbose;
+if ($verbose) {
+  foreach my $key (keys %config) {
+    print "$key: $config{$key}\n";
+  }
 }
 
-handle_hostname(%config);
-handle_wifi(%config);
+{
+  # This bit of magic will find every sub starting with "handle_".
+  # It just stands in for explicitly calling:
+  #
+  #   handle_hostname(%config);
+  #   handle_wifi(%config);
+  #
+  # and so on down the line.
+
+  no strict 'refs';
+  my (@handlers) = grep { defined &{"OcciConfig\::$_"} && m/^handle_/ } keys %{"OcciConfig\::"};
+
+  foreach my $handler (@handlers) {
+    print "\t" . $handler . "\n" if $verbose;
+    &{$handler}(%config);
+  }
+}
+
+=head1 CONFIGURATION HANDLERS
+
+To add a handler, just write a sub that takes the %config hash, like so:
+
+    sub handle_foo {
+      my %config = @_;
+    }
+
+It will automatically be called every time occi runs.
+
+=over
+
+=item handle_hostname()
+
+Update current hostname and make sure it's set properly at boot.
+
+=cut
 
 sub handle_hostname {
   my %config = @_;
 
-  # check and see if this is already configured
-  my $existing_etc_hostname = get_file('/etc/hostname');
-  my $existing_hostname = `hostname`;
+  # What's the existing configuration?
+  chomp(my $existing_etc_hostname = get_file('/etc/hostname'));
+  chomp(my $existing_hostname = `hostname`);
 
   unless ($existing_etc_hostname eq $config{hostname}) {
+    # Make sure this is set correctly at next boot
     put_file('/etc/hostname', $config{hostname});
   }
 
   unless ($existing_hostname eq $config{hostname}) {
-    `hostname $config{hostname}`; # XXX this of course is a bad idea
+    # Make sure this is set correctly right _now_.
+    system('hostname', $config{hostname});
   }
 }
 
+=item handle_wifi()
+
+=cut
+
 sub handle_wifi {
   my %config = @_;
+  # stub
 }
 
-=head1 SUBROUTINES
+=back
+
+=head1 UTILITY SUBROUTINES
 
 =over
 
@@ -88,17 +134,25 @@ sub get_file {
   }
 
   local $/ = undef;
-  open my $fh, '<', $path; 
+  open my $fh, '<', $path
+    or die "Failed opening $path: $!"; 
   my $contents = <$fh>;
   close $fh;
 
   return $contents;
 }
 
+=item put_file($path, $content)
+
+Put $content in the file at $path.
+
+=cut
+
 sub put_file {
   my ($path, $content) = @_;
 
-  open my $fh, '>', $path;
+  open my $fh, '>', $path
+    or die "Failed opening $path: $!"; 
   print $fh $content;
   close $fh;
 }

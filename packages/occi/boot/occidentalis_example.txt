@@ -1,0 +1,8 @@
+# In order to use this file, you can rename it to /boot/occidentalis.txt
+# and change the options on each line.
+#
+# Lines with a leading "#" are comments.  Blank lines are ignored.
+
+hostname=somepi
+wifi_ssid=somewifinetwork
+wifi_password=somepassword

@@ -1,3 +1,0 @@
-hostname=somepi
-wifi_ssid=somewifinetwork
-wifi_password=somepassword
