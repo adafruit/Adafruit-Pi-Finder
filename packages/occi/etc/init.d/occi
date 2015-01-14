@@ -1,0 +1,39 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:		occi
+# Required-Start:	$all
+# Required-Stop:	
+# Default-Start:	2 3 4 5
+# Default-Stop:		0 1 6
+# Short-Description:	Occidentalis Configuration Utility
+### END INIT INFO
+
+set -e
+
+# /etc/init.d/occi: run the occi configuration utility
+test -x /usr/bin/occi || exit 1
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo Starting occi configuration
+    occi
+    ;;
+  stop)
+    ;;
+  restart)
+    echo Re-applying occi configuration
+    occi
+    ;;
+  force-reload)
+    echo Re-applying occi configuration
+    occi
+    ;;
+  *)
+    echo "Usage: /etc/init.d/occi {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

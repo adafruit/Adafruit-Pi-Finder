@@ -1,0 +1,6 @@
+occi (0.1.0) unstable; urgency=low
+
+ * Initial release.
+ * First version of the occi config utility.
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Tue, 13 Jan 2015 13:01:00 -0700
