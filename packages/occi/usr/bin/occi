@@ -104,6 +104,18 @@ sub handle_hostname {
     # Make sure this is set correctly right _now_.
     system('hostname', $config{hostname});
   }
+
+  # Make sure our new hostname is mentioned in /etc/hosts:
+  my $etc_hosts = get_file('/etc/hosts');
+  my $new_etc_hosts = $etc_hosts;
+  my $config_hostline = "127.0.1.1\t$config{hostname}";
+  $new_etc_hosts =~ s/^(127[.]0[.]1[.]1\s+${existing_hostname})$/$config_hostline/m;
+  if ($new_etc_hosts !~ /$config_hostline/) {
+    $new_etc_hosts .= "\n$config_hostline";
+  }
+  print $new_etc_hosts . "\n";
+  put_file('/etc/hosts', $new_etc_hosts);
+
 }
 
 =item handle_wifi()
