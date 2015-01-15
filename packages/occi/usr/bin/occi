@@ -43,8 +43,9 @@ HELPTEXT
 my %config = parse_config($OCCI_CONFIG);
 
 if ($verbose) {
+  print "Configuration from $OCCI_CONFIG\n";
   foreach my $key (keys %config) {
-    print "$key: $config{$key}\n";
+    print "\t$key: $config{$key}\n";
   }
 }
 
@@ -60,9 +61,13 @@ if ($verbose) {
   no strict 'refs';
   my (@handlers) = grep { defined &{"OcciConfig\::$_"} && m/^handle_/ } keys %{"OcciConfig\::"};
 
+  print "Handlers:\n" if $verbose;
   foreach my $handler (@handlers) {
     print "\t" . $handler . "\n" if $verbose;
-    &{$handler}(%config);
+    my @log = &{$handler}(%config);
+    foreach my $logline (@log) {
+      print "\t\t$logline\n" if $verbose;
+    }
   }
 }
 
@@ -70,10 +75,12 @@ exit 0;
 
 =head1 CONFIGURATION HANDLERS
 
-To add a handler, just write a sub that takes the %config hash, like so:
+To add a handler, just write a sub that takes the %config hash, like so,
+and returns a list containing one or more log items:
 
     sub handle_foo {
       my %config = @_;
+      return ('nothing to do here');
     }
 
 It will automatically be called every time occi runs.
@@ -89,7 +96,10 @@ Update current hostname and make sure it's set properly at boot.
 sub handle_hostname {
   my %config = @_;
 
-  return unless defined $config{hostname};
+  return ('no hostname specified')
+    unless defined $config{hostname};
+
+  my @log;
 
   # What's the existing configuration?
   chomp(my $existing_etc_hostname = get_file('/etc/hostname'));
@@ -97,11 +107,13 @@ sub handle_hostname {
 
   unless ($existing_etc_hostname eq $config{hostname}) {
     # Make sure this is set correctly at next boot
+    push @log, 'Setting /etc/hostname to ' . $config{hostname};
     put_file('/etc/hostname', $config{hostname});
   }
 
   unless ($existing_hostname eq $config{hostname}) {
     # Make sure this is set correctly right _now_.
+    push @log, 'Setting current hostname to ' . $config{hostname};
     system('hostname', $config{hostname});
   }
 
@@ -113,9 +125,12 @@ sub handle_hostname {
   if ($new_etc_hosts !~ /$config_hostline/) {
     $new_etc_hosts .= "\n$config_hostline";
   }
-  print $new_etc_hosts . "\n";
-  put_file('/etc/hosts', $new_etc_hosts);
+  if ($etc_hosts ne $new_etc_hosts) {
+    push @log, 'Adding ' . $config_hostline . ' to /etc/hosts';
+    put_file('/etc/hosts', $new_etc_hosts);
+  }
 
+  return @log;
 }
 
 =item handle_wifi()
@@ -124,6 +139,7 @@ sub handle_hostname {
 
 sub handle_wifi {
   my %config = @_;
+  return ();
   # stub
 }
 
