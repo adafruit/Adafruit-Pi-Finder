@@ -1,0 +1,191 @@
+#!/usr/bin/env perl
+
+=head1 NAME
+
+occi - Adafruit Occidentalis Configuration Helper for Raspberry Pi
+
+=head1 DESCRIPTION
+
+occi is a simple utility for applying configuration settings like
+hostname and WiFi credentials to your Raspberry Pi.
+
+=cut
+
+use warnings;
+use strict;
+
+package OcciConfig;
+
+my $OCCI_CONFIG = "/boot/occidentalis.txt";
+my $verbose = 1;
+
+print "Adafruit Occidentalis configuration helper, v0.1.0\n";
+
+my %config = parse_config($OCCI_CONFIG);
+
+if ($verbose) {
+  foreach my $key (keys %config) {
+    print "$key: $config{$key}\n";
+  }
+}
+
+{
+  # This bit of magic will find every sub starting with "handle_".
+  # It just stands in for explicitly calling:
+  #
+  #   handle_hostname(%config);
+  #   handle_wifi(%config);
+  #
+  # and so on down the line.
+
+  no strict 'refs';
+  my (@handlers) = grep { defined &{"OcciConfig\::$_"} && m/^handle_/ } keys %{"OcciConfig\::"};
+
+  foreach my $handler (@handlers) {
+    print "\t" . $handler . "\n" if $verbose;
+    &{$handler}(%config);
+  }
+}
+
+=head1 CONFIGURATION HANDLERS
+
+To add a handler, just write a sub that takes the %config hash, like so:
+
+    sub handle_foo {
+      my %config = @_;
+    }
+
+It will automatically be called every time occi runs.
+
+=over
+
+=item handle_hostname()
+
+Update current hostname and make sure it's set properly at boot.
+
+=cut
+
+sub handle_hostname {
+  my %config = @_;
+
+  # What's the existing configuration?
+  chomp(my $existing_etc_hostname = get_file('/etc/hostname'));
+  chomp(my $existing_hostname = `hostname`);
+
+  unless ($existing_etc_hostname eq $config{hostname}) {
+    # Make sure this is set correctly at next boot
+    put_file('/etc/hostname', $config{hostname});
+  }
+
+  unless ($existing_hostname eq $config{hostname}) {
+    # Make sure this is set correctly right _now_.
+    system('hostname', $config{hostname});
+  }
+}
+
+=item handle_wifi()
+
+=cut
+
+sub handle_wifi {
+  my %config = @_;
+  # stub
+}
+
+=back
+
+=head1 UTILITY SUBROUTINES
+
+=over
+
+=item parse_config($path_to_file)
+
+Grab a hash of configuration options out of some text file,
+formatted like so:
+
+    key1=value
+    key2=value2
+
+=cut
+
+sub parse_config {
+  my %config;
+  my ($config_path) = @_;
+  my $config_str = get_file($config_path);
+
+  while ($config_str =~ m{^([a-z_]+) = (.*?)$}ixmg) {
+    $config{$1} = $2;
+  }
+
+  return %config;
+}
+
+=item get_file($path_to_file)
+
+Returns the contents of a given file as a string.
+
+=cut
+
+sub get_file {
+  my ($path) = @_;
+
+  if (! -e $path) {
+    die "$path doesn't appear to exist."
+  }
+
+  local $/ = undef;
+  open my $fh, '<', $path
+    or die "Failed opening $path: $!"; 
+  my $contents = <$fh>;
+  close $fh;
+
+  return $contents;
+}
+
+=item put_file($path, $content)
+
+Put $content in the file at $path.
+
+=cut
+
+sub put_file {
+  my ($path, $content) = @_;
+
+  open my $fh, '>', $path
+    or die "Failed opening $path: $!"; 
+  print $fh $content;
+  close $fh;
+}
+
+=back
+
+=head1 AUTHOR
+
+Brennen Bearnes
+Todd Treece
+
+=head1 COPYING
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Adafruit Industries
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+=cut
