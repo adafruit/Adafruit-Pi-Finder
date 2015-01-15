@@ -21,6 +21,25 @@ my $verbose = 1;
 
 print "Adafruit Occidentalis configuration helper, v0.1.0\n";
 
+# Make sure there's a config file available.
+unless (-f $OCCI_CONFIG) {
+  print <<'HELPTEXT';
+It looks like you don't have a /boot/occidentalis.txt yet.
+
+In order to create one:
+
+    sudo nano /boot/occidentalis.txt
+
+And then add configuration keys like:
+
+    hostname=somepi
+
+See /usr/share/doc/occi/occidentalis_example.txt for a full example.
+HELPTEXT
+
+  exit 1;
+}
+
 my %config = parse_config($OCCI_CONFIG);
 
 if ($verbose) {
@@ -47,6 +66,8 @@ if ($verbose) {
   }
 }
 
+exit 0;
+
 =head1 CONFIGURATION HANDLERS
 
 To add a handler, just write a sub that takes the %config hash, like so:
@@ -67,6 +88,8 @@ Update current hostname and make sure it's set properly at boot.
 
 sub handle_hostname {
   my %config = @_;
+
+  return unless defined $config{hostname};
 
   # What's the existing configuration?
   chomp(my $existing_etc_hostname = get_file('/etc/hostname'));
