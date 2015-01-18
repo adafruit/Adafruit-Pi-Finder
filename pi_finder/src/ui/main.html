@@ -23,7 +23,6 @@
     <a id="start">Find My Pi!</a>
 
     <div id="status"></div>
-    <a id="show_terminal" class="hide">--- Show Terminal Output ---</a>
 
     <script>
 
@@ -47,14 +46,12 @@
 
         $('#show_terminal').click(function() {
           $(this).hide(true);
-          ipc.send('show_terminal', true);
         });
 
       });
 
       ipc.on('found', function(arg) {
         $('#status').html(arg);
-        $('#show_terminal').removeClass('hide');
       });
 
       ipc.on('bootstrap', function(arg) {

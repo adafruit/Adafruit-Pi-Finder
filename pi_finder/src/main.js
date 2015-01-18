@@ -22,6 +22,7 @@ app.on('ready', function() {
     'always-on-top': true,
     width: 600,
     height: 400,
+    'use-content-size': true,
     resizable: false,
     show: false
   });
@@ -47,10 +48,6 @@ app.on('ready', function() {
     main.setSize(250, 560);
   });
 
-  ipc.on('show_terminal', function(e, arg) {
-    terminal.show();
-  });
-
   ipc.on('find', function(e, arg) {
 
     var finder = Finder();
@@ -64,6 +61,9 @@ app.on('ready', function() {
     finder.start(function(err, ip) {
 
       e.sender.send('found', 'Found Pi at: ' + ip + '!<br>Starting Bootstrap.');
+
+      terminal.show();
+      terminal.focus();
 
       var options = {
         username: arg.ssh_user || 'pi',
@@ -93,7 +93,6 @@ app.on('ready', function() {
 
             if(terminal) {
               terminal.close();
-              main.center();
               main.focus();
             }
 
