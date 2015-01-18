@@ -3,7 +3,7 @@ module.exports = function(grunt) {
     'build-atom-shell-app': {
       options: {
         build_dir: '../build',
-        platforms: ['darwin', 'win32', 'linux32', 'linux64'],
+        platforms: ['darwin', 'win32'],
         cache_dir: (process.env.TMPDIR || process.env.TEMP || '/tmp') + 'atom-shell-cache',
         app_dir: './'
       }
@@ -12,9 +12,12 @@ module.exports = function(grunt) {
       options: {
         force: true
       },
-      all: ['../build', '*.zip', '*.tar']
+      all: ['../build', '*.zip']
     },
     compress: {
+      options: {
+        force: true
+      },
       mac: {
         options: {
           archive: 'mac_osx.zip'
@@ -32,27 +35,6 @@ module.exports = function(grunt) {
         cwd: '../build/win32/atom-shell/',
         src: ['**'],
         dest:'occidentalis/'
-      },
-      linux32: {
-        options: {
-          archive: 'linux_32.tar',
-          mode: 'tar'
-        },
-        expand: true,
-        cwd: '../build/linux32/atom-shell/',
-        src: ['**'],
-        dest:'occidentalis/'
-
-      },
-      linux64: {
-        options: {
-          archive: 'linux_64.tar',
-          mode: 'tar'
-        },
-        expand: true,
-        cwd: '../build/linux64/atom-shell/',
-        src: ['**'],
-        dest:'occidentalis/'
       }
     }
 
@@ -62,6 +44,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'compress']);
+  grunt.registerTask('default', ['clean', 'build-atom-shell-app']);
+  grunt.registerTask('build', ['default', 'compress']);
 
 };
