@@ -6,14 +6,16 @@ if [ "$1" == "" ]; then
   exit 1
 fi
 
-# copy the packages to a temp folder
+# copy the packages to a temp folder, build them:
 TEMP_DIR=`mktemp -d`
-cp $1/packages/build/*.deb $TEMP_DIR
+cp -r $1/packages/* $TEMP_DIR
+cd $TEMP_DIR
+make
 
 # sign packages, and add them to the repo
-dpkg-sig -k $GPG_KEY --sign builder $TEMP_DIR/*.deb
+dpkg-sig -k $GPG_KEY --sign builder $TEMP_DIR/build/*.deb
 cd /var/packages/raspbian/
-reprepro includedeb wheezy $TEMP_DIR/*.deb 2>/dev/null
+reprepro includedeb wheezy $TEMP_DIR/build/*.deb 2>/dev/null
 
 # clean up
 rm -r $TEMP_DIR
