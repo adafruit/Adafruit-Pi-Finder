@@ -40,7 +40,7 @@ proto.username = 'pi';
 proto.password = 'raspberry';
 proto.host = '10.0.1.1';
 proto.port = 22;
-proto.command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
+proto.install_command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
 proto.pi_config = {};
 
 proto.handleError = function(err) {
@@ -69,12 +69,26 @@ proto.handleReady = function() {
 
 this.buildCommand = function() {
 
-  foreach(var key in this.pi_config) {
+  var command = options = '';
+
+  // loop through options and build new occidentalis.txt
+  for(var key in this.pi_config) {
 
     if(! this.pi_config.hasOwnProperty(key)) {
       continue;
     }
 
+    options += key + '=' + this.pi_config[key] + '\r\n';
+
   }
+
+  // only change txt config file if the user passes options via the UI
+  if(options) {
+    command = 'if [ -f /boot/occidentalis.txt ]; ';
+    command += 'then sudo cp /boot/occidentalis.txt{,.bak}; fi; && ';
+    command += ' echo "' + command + '" | sudo tee /boot/occidentalis.txt && ';
+  }
+
+  command += this.install_command;
 
 };
