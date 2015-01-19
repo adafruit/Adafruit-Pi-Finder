@@ -139,8 +139,22 @@ sub handle_hostname {
 
 sub handle_wifi {
   my %config = @_;
+
+  return ('no wifi_ssid specified')
+    unless defined $config{wifi_ssid};
+
+  my $network_config = capture_output(
+    'wpa_passphrase',
+    $config{wifi_ssid},
+    $config{'wifi_password'}
+  );
+
+  put_file(
+    '/etc/wpa_supplicant/wpa_supplicant.conf',
+    $network_config
+  );
+
   return ();
-  # stub
 }
 
 =back
@@ -164,8 +178,13 @@ sub parse_config {
   my ($config_path) = @_;
   my $config_str = get_file($config_path);
 
+  # Crude dos2unix:
+  $config_str =~ s/\r\n/\n/g;
+
   while ($config_str =~ m{^([a-z_]+) = (.*?)$}ixmg) {
-    $config{$1} = $2;
+    my $key = $1;
+    my $value = $2;
+    $config{$key} = $value;
   }
 
   return %config;
@@ -207,6 +226,83 @@ sub put_file {
   print $fh $content;
   close $fh;
 }
+
+=item capture_output($command, @args)
+
+Capture output from a given command without invoking the shell.
+
+This is a simplified version of a routine from:
+
+http://search.cpan.org/~pjf/IPC-System-Simple-1.25/
+
+=cut
+
+sub capture_output {
+  my ($command, @args) = @_;
+
+  our $EXITVAL = -1;
+
+  my $wantarray = wantarray();
+
+  pipe(my ($read_fh, $write_fh))
+    or die("Can't create pipe: $!");
+
+  # This next line also does an implicit fork.
+  my $pid = open(my $pipe, '-|');  ## no critic
+
+  if (not defined $pid) {
+    die("$command: $!");
+  } elsif (not $pid) {
+    # Child process, execs command.
+
+    close($read_fh);
+
+    no warnings;   ## no critic
+
+    CORE::exec { $command } $command, @args;
+
+    # Oh no, exec fails!  Send the reason why to
+    # the parent.
+
+    print {$write_fh} int($!);
+    exit(-1);
+  }
+
+  {
+    # In parent process.
+
+    close($write_fh);
+
+    # Parent process, check for child error.
+    my $error = <$read_fh>;
+
+    # Tidy up our pipes.
+    close($read_fh);
+
+    # Check for error.
+    if ($error) {
+      # Setting $! to our child error number gives
+      # us nice looking strings when printed.
+      local $! = $error;
+      die("$command: $!");
+    }
+  }
+
+  # Parent process, we don't care about our pid, but we
+  # do go and read our pipe.
+
+  if ($wantarray) {
+    my @results = <$pipe>;
+    close($pipe);
+    return @results;
+  }
+
+  my $results = join("", <$pipe>);
+  close($pipe);
+
+  return $results;
+}
+
 
 =back
 
