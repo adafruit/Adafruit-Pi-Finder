@@ -5,3 +5,5 @@ node_modules
 pi_finder/build
 pi_finder/src/*.zip
 pi_finder/src/*.tar
+packages/build/occi_*.deb
+packages/build/occidentalis_*.deb
