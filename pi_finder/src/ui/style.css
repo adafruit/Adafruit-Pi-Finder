@@ -11,7 +11,7 @@ img {
   margin: 30px auto;
 }
 
-#start {
+#find, #bootstrap {
   text-align: center;
   box-sizing: border-box;
   display: block;
@@ -37,35 +37,11 @@ img {
   font-size: 12px;
 }
 
-#show_options {
-  font-size: 12px;
-  margin-bottom: 10px;
-  display: block;
-  cursor: pointer;
-  color: #ddd;
-}
-
-#show_options:hover {
-  color: #fff;
-}
-
-#show_terminal {
-  font-size: 12px;
-  margin-top: 10px;
-  display: block;
-  cursor: pointer;
-  color: #ddd;
-}
-
-#show_terminal:hover {
-  color: #fff;
-}
-
 .hide {
   display: none !important;
 }
 
-#options {
+#ssh, #options {
   display: block;
   width: 140px;
   margin: 0 auto 20px auto;

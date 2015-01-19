@@ -6,23 +6,29 @@
   </head>
   <body>
     <img src="adafruit.svg">
-    <a id="show_options">--- Options ---</a>
+
+    <div id="status"></div>
+
+    <div id="ssh" class="hide">
+      <label>IP Address:</label>
+      <input name="host" value="">
+      <label>SSH User:</label>
+      <input name="username" value="pi">
+      <label>SSH Password</label>
+      <input name="password" value="raspberry">
+    </div>
+
     <div id="options" class="hide">
       <label>Hostname:</label>
-      <input name="hostname" value="raspberrypi">
-      <label>SSH User:</label>
-      <input name="ssh_user" value="pi">
-      <label>SSH Password</label>
-      <input name="ssh_pass" value="raspberry">
+      <input name="hostname" placeholder="raspberrypi">
       <label>WiFi SSID:</label>
       <input name="wifi_ssid" placeholder="ssid">
       <label>WiFi Password</label>
       <input name="wifi_pass" placeholder="******">
     </div>
 
-    <a id="start">Find My Pi!</a>
-
-    <div id="status"></div>
+    <a id="find">Find My Pi!</a>
+    <a id="bootstrap" class="hide">Bootstrap!</a>
 
     <script>
 
@@ -31,27 +37,26 @@
 
       $(document).on('ready', function() {
 
-        $('#start').click(function() {
-          $('#show_options, #options').addClass('hide');
+        $('#find').click(function() {
           $('img').addClass('spin');
           $(this).hide();
-          ipc.send('find', get_options());
+          ipc.send('find');
         });
 
-        $('#show_options').click(function() {
+        $('#bootstrap').click(function() {
+          $('img').addClass('spin');
           $(this).hide();
-          $('#options').removeClass('hide');
-          ipc.send('options', true);
-        });
-
-        $('#show_terminal').click(function() {
-          $(this).hide(true);
+          $('#ssh, #options').hide();
+          ipc.send('bootstrap', get_ssh(), get_options());
         });
 
       });
 
       ipc.on('found', function(arg) {
-        $('#status').html(arg);
+        $('img').removeClass('spin');
+        $('#options, #ssh, #bootstrap').removeClass('hide');
+        $('input[name=host]').val(arg);
+        $('#status').html('Found Pi at: ' + arg);
       });
 
       ipc.on('bootstrap', function(arg) {
@@ -75,6 +80,18 @@
 
           options[$(this).attr('name')] = $(this).val();
 
+        });
+
+        return options;
+
+      }
+
+      function get_ssh() {
+
+        var options = {};
+
+        $('#ssh input').each(function() {
+          options[$(this).attr('name')] = $(this).val();
         });
 
         return options;
