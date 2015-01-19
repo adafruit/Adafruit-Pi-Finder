@@ -29,7 +29,7 @@ function ssh(options) {
   this.ssh.connect({
     username: this.username,
     password: this.password,
-    host: this.ip,
+    host: this.host,
     port: this.port
   });
 
@@ -51,6 +51,11 @@ proto.handleData = function(data) {
   this.emit('data', err.toString());
 };
 
+proto.handleClose = function() {
+  this.emit('done', 'done');
+  this.ssh.end();
+};
+
 proto.handleReady = function() {
 
   this.ssh.exec(this.buildCommand(), function(err, stream) {
@@ -61,13 +66,14 @@ proto.handleReady = function() {
 
     stream.on('error', this.handleError.bind(this));
     stream.on('data', this.handleData.bind(this));
+    stream.on('close', this.handleClose.bind(this));
     stream.stderr.on('data', this.handleError.bind(this));
 
   }.bind(this));
 
 };
 
-this.buildCommand = function() {
+proto.buildCommand = function() {
 
   var command = options = '';
 
@@ -78,7 +84,7 @@ this.buildCommand = function() {
       continue;
     }
 
-    options += key + '=' + this.pi_config[key] + '\r\n';
+    options += key + '=' + this.pi_config[key] + '\\r\\n';
 
   }
 
@@ -86,9 +92,11 @@ this.buildCommand = function() {
   if(options) {
     command = 'if [ -f /boot/occidentalis.txt ]; ';
     command += 'then sudo cp /boot/occidentalis.txt{,.bak}; fi; && ';
-    command += ' echo "' + command + '" | sudo tee /boot/occidentalis.txt && ';
+    command += 'echo "' + options + '" | sudo tee /boot/occidentalis.txt && ';
   }
 
   command += this.install_command;
+
+  return command;
 
 };

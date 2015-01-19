@@ -1,6 +1,6 @@
 var app = require('app'),
     ipc = require('ipc'),
-    SSH = require('ssh2'),
+    SSH = require('./ssh.js'),
     BrowserWindow = require('browser-window'),
     Finder = require('./finder.js'),
     main, terminal;
@@ -44,78 +44,53 @@ app.on('ready', function() {
     terminal = null;
   });
 
-  ipc.on('options', function(e, arg) {
-    main.setSize(250, 560);
+  ipc.on('bootstrap', function(e, config, pi_config) {
+
+    terminal.show();
+    terminal.focus();
+    main.setSize(250, 360);
+
+    config.install_command = 'cat /boot/occidentalis.txt'; // TODO kill
+    config.pi_config = pi_config;
+
+    var ssh = SSH(config);
+
+    ssh.on('data', function(data) {
+      main.webContents.send('status', 'Bootstrapping...');
+      terminal.webContents.send('stdout', data);
+    });
+
+    ssh.on('error', function(err) {
+      terminal.webContents.send('stderr', err);
+    });
+
+    ssh.on('done', function() {
+
+      main.webContents.send('bootstrap', 'Bootstrap successful!<br>');
+
+      if(terminal) {
+        //terminal.close();
+      }
+
+      if(main) {
+        main.focus();
+      }
+
+    });
+
   });
 
   ipc.on('find', function(e, arg) {
 
     var finder = Finder();
 
-    main.setSize(250, 360);
-
     finder.on('ip', function(ip) {
-      e.sender.send('status', 'Trying IP: ' + ip + '...');
+      e.sender.send('status', 'Searching...');
     });
 
     finder.start(function(err, ip) {
-
-      e.sender.send('found', 'Found Pi at: ' + ip + '!<br>Starting Bootstrap.');
-
-      terminal.show();
-      terminal.focus();
-
-      var options = {
-        username: arg.ssh_user || 'pi',
-        password: arg.ssh_pass || 'raspberry',
-        host: ip,
-        port: 22
-      };
-
-      var command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
-
-      var ssh = new SSH();
-
-      ssh.on('ready', function() {
-
-        ssh.exec(command, function(err, stream) {
-
-          if(err) {
-            return terminal.webContents.send('stderr', err.toString());
-          }
-
-          stream.on('error', function(err) {
-            terminal.webContents.send('stderr', err.toString());
-          });
-
-          stream.on('close', function() {
-            e.sender.send('bootstrap', 'Bootstrap successful!<br>');
-
-            if(terminal) {
-              terminal.close();
-              main.focus();
-            }
-
-            ssh.end();
-          }).on('data', function(data) {
-            e.sender.send('status', 'Bootstrapping...');
-            terminal.webContents.send('stdout', data.toString());
-          }).stderr.on('data', function(data) {
-            terminal.webContents.send('stderr', data.toString());
-          });
-        });
-
-      });
-
-      setTimeout(function() {
-        ssh.connect(options);
-      }, 2000);
-
-      ssh.on('error', function(err) {
-        e.sender.send('status', 'Error. Please check terminal<br> Attempting to continue.');
-        terminal.webContents.send('stderr', err.toString());
-      });
-
+      main.webContents.send('found', ip);
+      main.setSize(250, 560);
     });
 
   });
