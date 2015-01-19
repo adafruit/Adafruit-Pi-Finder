@@ -5,5 +5,10 @@ node_modules
 pi_finder/build
 pi_finder/src/*.zip
 pi_finder/src/*.tar
+
+# debs we build on the fly
 packages/build/occi_*.deb
 packages/build/occidentalis_*.deb
+
+# generated man pages - see packages/Makefile
+packages/occi/usr/share/man/man1/*.gz
