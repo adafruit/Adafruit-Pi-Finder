@@ -9,17 +9,21 @@ occi - Adafruit Occidentalis Configuration Helper for Raspberry Pi
 occi is a simple utility for applying configuration settings like
 hostname and WiFi credentials to your Raspberry Pi.
 
+Settings are stored in a simple text file, usually
+F</boot/occidentalis.txt>.
+
 =cut
 
 use warnings;
 use strict;
 
-package OcciConfig;
+package OcciConfig v0.1.4;
 
 my $OCCI_CONFIG = "/boot/occidentalis.txt";
 my $verbose = 1;
 
-print "Adafruit Occidentalis configuration helper, v0.1.0\n";
+# The $VERSION here comes from the package line above:
+print "Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}\n";
 
 # Make sure there's a config file available.
 unless (-f $OCCI_CONFIG) {
@@ -28,7 +32,7 @@ It looks like you don't have a $OCCI_CONFIG yet.
 
 In order to create one:
 
-    sudo nano /boot/occidentalis.txt
+    sudo nano $OCCI_CONFIG
 
 And then add configuration keys like:
 
