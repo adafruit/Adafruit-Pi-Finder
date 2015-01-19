@@ -23,8 +23,8 @@ print "Adafruit Occidentalis configuration helper, v0.1.0\n";
 
 # Make sure there's a config file available.
 unless (-f $OCCI_CONFIG) {
-  print <<'HELPTEXT';
-It looks like you don't have a /boot/occidentalis.txt yet.
+  print <<"HELPTEXT";
+It looks like you don't have a $OCCI_CONFIG yet.
 
 In order to create one:
 
@@ -140,8 +140,12 @@ sub handle_hostname {
 sub handle_wifi {
   my %config = @_;
 
+  my $conf_file = '/etc/wpa_supplicant/wpa_supplicant.conf';
+
   return ('no wifi_ssid specified')
     unless defined $config{wifi_ssid};
+
+  my @log = 'Configuring ' . $config{wifi_ssid};
 
   my $network_config = capture_output(
     'wpa_passphrase',
@@ -149,12 +153,24 @@ sub handle_wifi {
     $config{'wifi_password'}
   );
 
+  my $blurb = get_blurb();
+
+  $network_config = <<"WPA";
+# $blurb
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+$network_config
+WPA
+
+  push @log, "Writing $conf_file";
+
   put_file(
-    '/etc/wpa_supplicant/wpa_supplicant.conf',
-    $network_config
+    $conf_file,
+    $network_config,
+    $conf_file . '.backup'
   );
 
-  return ();
+  return @log;
 }
 
 =back
@@ -219,13 +235,34 @@ Put $content in the file at $path.
 =cut
 
 sub put_file {
-  my ($path, $content) = @_;
+  my ($path, $content, $backup_path) = @_;
+
+  # Handle one-time backups - this could use some rethinking.
+  if (defined $backup_path) {
+    if (! -e $backup_path) {
+      if (-e $path) {
+        my $old_contents = get_file($path);
+        put_file($backup_path, $old_contents);
+      }
+    }
+  }
 
   open my $fh, '>', $path
     or die "Failed opening $path: $!"; 
   print $fh $content;
   close $fh;
 }
+
+=item get_blurb()
+
+Return a useful blurb for inclusion in config file comments.
+
+=cut
+
+sub get_blurb {
+  return 'This file is managed by $OCCI_CONFIG';
+}
+
 
 =item capture_output($command, @args)
 
@@ -239,8 +276,6 @@ http://search.cpan.org/~pjf/IPC-System-Simple-1.25/
 
 sub capture_output {
   my ($command, @args) = @_;
-
-  our $EXITVAL = -1;
 
   my $wantarray = wantarray();
 
