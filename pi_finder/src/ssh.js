@@ -48,7 +48,7 @@ proto.handleError = function(err) {
 };
 
 proto.handleData = function(data) {
-  this.emit('data', err.toString());
+  this.emit('data', data.toString());
 };
 
 proto.handleClose = function() {
