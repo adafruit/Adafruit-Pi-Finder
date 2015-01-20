@@ -264,7 +264,7 @@ Return a useful blurb for inclusion in config file comments.
 =cut
 
 sub get_blurb {
-  return 'This file is managed by $OCCI_CONFIG';
+  return "This file is managed by $OCCI_CONFIG";
 }
 
 
