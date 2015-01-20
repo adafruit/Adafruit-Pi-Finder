@@ -14,16 +14,15 @@ F</boot/occidentalis.txt>.
 
 =cut
 
+package OcciConfig v0.3.1;
+
 use warnings;
 use strict;
 
-package OcciConfig v0.2.0;
+use IPC::System::Simple qw(capturex);
 
-my $OCCI_CONFIG = "/boot/occidentalis.txt";
-
+my $OCCI_CONFIG  = "/boot/occidentalis.txt";
 my %allowed_keys = map { $_ => 1} qw(hostname wifi_password wifi_ssid);
-
-my $verbose = 1;
 
 # The $VERSION here comes from the package line above:
 diag(0, "Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}");
@@ -49,20 +48,18 @@ HELPTEXT
 
 my %config = parse_config($OCCI_CONFIG);
 
-if ($verbose) {
-  diag(1, 'file', $OCCI_CONFIG);
-  my @errors;
-  foreach my $key (sort keys %config) {
-    if ($allowed_keys{$key}) {
-      diag(2, 'valid', $key, $config{$key});
-    } else {
-      push @errors, $key;
-    }
+diag(1, 'file', $OCCI_CONFIG);
+my @errors;
+foreach my $key (sort keys %config) {
+  if ($allowed_keys{$key}) {
+    diag(2, 'valid', $key, $config{$key});
+  } else {
+    push @errors, $key;
   }
+}
 
-  foreach my $err (@errors) {
-    diag(2, 'error', $err, "unrecognized configuration key");
-  }
+foreach my $err (@errors) {
+  diag(2, 'error', $err, "unrecognized configuration key");
 }
 
 {
@@ -80,7 +77,7 @@ if ($verbose) {
   foreach my $handler (@handlers) {
     my @log = &{$handler}(%config);
     foreach my $logline (@log) {
-      diag(1, 'run', $handler, $logline) if $verbose;
+      diag(1, 'run', $handler, $logline);
     }
   }
 }
@@ -117,7 +114,7 @@ sub handle_hostname {
 
   # What's the existing configuration?
   chomp(my $existing_etc_hostname = get_file('/etc/hostname'));
-  chomp(my $existing_hostname = `hostname`);
+  chomp(my $existing_hostname = occi_capture('hostname'));
 
   unless ($existing_etc_hostname eq $config{hostname}) {
     # Make sure this is set correctly at next boot
@@ -162,10 +159,11 @@ sub handle_wifi {
 
   my @log = 'Configuring ' . $config{wifi_ssid};
 
-  if (! -f '/dev/wlan0') {
+  my ($ifconfig) = occi_capture('ifconfig', '-s');
+  if ($ifconfig !~ /wlan/) {
     push @log, 'No wireless hardware found.';
   } elsif (defined $config{wifi_password}) {
-    my $wpa_config = capture_output(
+    my $wpa_config = occi_capture(
       'wpa_passphrase',
       $config{wifi_ssid},
       $config{'wifi_password'}
@@ -183,7 +181,7 @@ WPA
     put_file($conf_file, $wpa_config, $conf_file . '.backup');
   } else {
     push @log, "No wifi_password defined, falling back to iwconfig.";
-    my $iwlog = capture_output(
+    my $iwlog = occi_capture(
       'iwconfig',
       'wlan0', # TODO: this of course is not always going to be the same...
       'essid',
@@ -192,6 +190,29 @@ WPA
   }
 
   return @log;
+}
+
+=item occi_capture($cmd, @args)
+
+Return a string containing the output of a command, or log an
+error.
+
+=cut
+
+sub occi_capture {
+  my ($cmd, @args) = @_;
+
+  my $output;
+
+  eval {
+    $output = capturex($cmd, @args);
+  };
+
+  if ($@) {
+    diag(1, 'error', $@);
+  }
+
+  return $output;
 }
 
 =back
@@ -295,80 +316,6 @@ sub diag {
   print "\t" x $depth;
   print join " :: ", @cols;
   print "\n";
-}
-
-=item capture_output($command, @args)
-
-Capture output from a given command without invoking the shell.
-
-This is a simplified version of a routine from:
-
-http://search.cpan.org/~pjf/IPC-System-Simple-1.25/
-
-=cut
-
-sub capture_output {
-  my ($command, @args) = @_;
-
-  my $wantarray = wantarray();
-
-  pipe(my ($read_fh, $write_fh))
-    or die("Can't create pipe: $!");
-
-  # This next line also does an implicit fork.
-  my $pid = open(my $pipe, '-|');  ## no critic
-
-  if (not defined $pid) {
-    die("$command: $!");
-  } elsif (not $pid) {
-    # Child process, execs command.
-
-    close($read_fh);
-
-    no warnings;   ## no critic
-
-    CORE::exec { $command } $command, @args;
-
-    # Oh no, exec fails!  Send the reason why to
-    # the parent.
-
-    print {$write_fh} int($!);
-    exit(-1);
-  }
-
-  {
-    # In parent process.
-
-    close($write_fh);
-
-    # Parent process, check for child error.
-    my $error = <$read_fh>;
-
-    # Tidy up our pipes.
-    close($read_fh);
-
-    # Check for error.
-    if ($error) {
-      # Setting $! to our child error number gives
-      # us nice looking strings when printed.
-      local $! = $error;
-      die("$command: $!");
-    }
-  }
-
-  # Parent process, we don't care about our pid, but we
-  # do go and read our pipe.
-
-  if ($wantarray) {
-    my @results = <$pipe>;
-    close($pipe);
-    return @results;
-  }
-
-  my $results = join("", <$pipe>);
-  close($pipe);
-
-  return $results;
 }
 
 
