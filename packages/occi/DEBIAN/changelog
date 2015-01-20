@@ -1,3 +1,9 @@
+occi (0.2.1) unstable; urgency=low
+
+ * Removes occi run from postinst
+
+ -- Todd Treece <todd@uniontownlabs.org>  Tue, 20 Jan 2015 14:23:00 -0500
+
 occi (0.1.0) unstable; urgency=low
 
  * Initial release.
@@ -5,8 +11,3 @@ occi (0.1.0) unstable; urgency=low
 
  -- Brennen Bearnes <bbearnes@gmail.com>  Tue, 13 Jan 2015 13:01:00 -0700
 
-occi (0.2.1) unstable; urgency=low
-
- * Removes occi run from postinst
-
- -- Todd Treece <todd@uniontownlabs.org>  Tue, 20 Jan 2015 14:23:00 -0500
