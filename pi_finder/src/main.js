@@ -51,10 +51,10 @@ app.on('ready', function() {
 
     config.pi_config = pi_config;
 
-    var ssh = SSH(config);
+    var ssh = SSH(config),
+        timer = working('Bootstrapping');
 
     ssh.on('data', function(data) {
-      main.webContents.send('status', 'Bootstrapping...');
       terminal.webContents.send('stdout', data);
     });
 
@@ -63,6 +63,7 @@ app.on('ready', function() {
     });
 
     ssh.on('done', function() {
+      clearInterval(timer);
       main.webContents.send('bootstrap', 'Bootstrap successful!<br>');
       main.focus();
     });
@@ -71,19 +72,44 @@ app.on('ready', function() {
 
   ipc.on('find', function(e, arg) {
 
-    var finder = Finder();
-
-    finder.on('ip', function(ip) {
-      e.sender.send('status', 'Searching...');
-    });
+    var finder = Finder(),
+        timer = working('Searching');
 
     finder.start(function(err, ip) {
+
+      clearInterval(timer);
+
+      if(!ip) {
+        return main.webContents.send('reset', true);
+      }
+
       main.webContents.send('found', ip);
       main.setSize(500, 500);
       main.focus();
       main.center();
+
     });
 
   });
 
 });
+
+function working(message) {
+
+  var count = 1;
+
+  var timer = setInterval(function() {
+
+    if(count > 3) {
+      count = 1;
+    }
+
+    main.webContents.send('status', message + Array(count + 1).join('.'));
+
+    count++;
+
+  }, 200);
+
+  return timer;
+
+}

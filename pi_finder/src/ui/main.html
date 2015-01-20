@@ -40,13 +40,11 @@
       $(document).on('ready', function() {
 
         $('#find').click(function() {
-          $('img').addClass('spin');
           $(this).hide();
           ipc.send('find');
         });
 
         $('#bootstrap').click(function() {
-          $('img').addClass('spin');
           $(this).hide();
           $('#ssh, #options').hide();
           ipc.send('bootstrap', get_ssh(), get_options());
@@ -54,8 +52,12 @@
 
       });
 
+      ipc.on('reset', function() {
+        $('#find').show();
+        $('#status').html('Your Pi could not be found. Is it plugged in via ethernet?');
+      });
+
       ipc.on('found', function(arg) {
-        $('img').removeClass('spin');
         $('#options, #ssh, #bootstrap').removeClass('hide');
         $('input[name=host]').val(arg);
         $('#status').html('Found Pi at: ' + arg);
@@ -63,7 +65,6 @@
 
       ipc.on('bootstrap', function(arg) {
         $('#status').html(arg);
-        $('img').removeClass('spin');
       });
 
       ipc.on('status', function(arg) {

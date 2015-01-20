@@ -29,6 +29,10 @@ img {
   cursor: pointer;
 }
 
+#find {
+  margin-top: 10px;
+}
+
 #status {
   display: block;
   text-align: center;
@@ -75,11 +79,3 @@ input {
   display: block;
   width: 100%;
 }
-
-.spin {
-  animation:spin 4s linear infinite;
-  -webkit-animation:spin 4s linear infinite;
-}
-
-@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
