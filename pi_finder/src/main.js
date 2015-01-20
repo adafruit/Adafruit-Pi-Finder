@@ -15,14 +15,13 @@ app.on('ready', function() {
   main = new BrowserWindow({
     width: 250,
     height: 360,
-    resizable: false
+    resizable: false,
+    'use-content-size': true
   });
 
   terminal = new BrowserWindow({
-    'always-on-top': true,
     width: 600,
     height: 400,
-    'use-content-size': true,
     resizable: false,
     show: false
   });
