@@ -17,13 +17,16 @@ F</boot/occidentalis.txt>.
 use warnings;
 use strict;
 
-package OcciConfig v0.1.4;
+package OcciConfig v0.2.0;
 
 my $OCCI_CONFIG = "/boot/occidentalis.txt";
+
+my %allowed_keys = map { $_ => 1} qw(hostname wifi_password wifi_ssid);
+
 my $verbose = 1;
 
 # The $VERSION here comes from the package line above:
-print "Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}\n";
+diag(0, "Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}");
 
 # Make sure there's a config file available.
 unless (-f $OCCI_CONFIG) {
@@ -47,9 +50,18 @@ HELPTEXT
 my %config = parse_config($OCCI_CONFIG);
 
 if ($verbose) {
-  print "Configuration from $OCCI_CONFIG\n";
-  foreach my $key (keys %config) {
-    print "\t$key: $config{$key}\n";
+  diag(1, 'file', $OCCI_CONFIG);
+  my @errors;
+  foreach my $key (sort keys %config) {
+    if ($allowed_keys{$key}) {
+      diag(2, 'valid', $key, $config{$key});
+    } else {
+      push @errors, $key;
+    }
+  }
+
+  foreach my $err (@errors) {
+    diag(2, 'error', $err, "unrecognized configuration key");
   }
 }
 
@@ -65,12 +77,10 @@ if ($verbose) {
   no strict 'refs';
   my (@handlers) = grep { defined &{"OcciConfig\::$_"} && m/^handle_/ } keys %{"OcciConfig\::"};
 
-  print "Handlers:\n" if $verbose;
   foreach my $handler (@handlers) {
-    print "\t" . $handler . "\n" if $verbose;
     my @log = &{$handler}(%config);
     foreach my $logline (@log) {
-      print "\t\t$logline\n" if $verbose;
+      diag(1, 'run', $handler, $logline) if $verbose;
     }
   }
 }
@@ -145,34 +155,41 @@ sub handle_wifi {
   my %config = @_;
 
   my $conf_file = '/etc/wpa_supplicant/wpa_supplicant.conf';
+  my $blurb = get_blurb();
 
   return ('no wifi_ssid specified')
     unless defined $config{wifi_ssid};
 
   my @log = 'Configuring ' . $config{wifi_ssid};
 
-  my $network_config = capture_output(
-    'wpa_passphrase',
-    $config{wifi_ssid},
-    $config{'wifi_password'}
-  );
+  if (! -f '/dev/wlan0') {
+    push @log, 'No wireless hardware found.';
+  } elsif (defined $config{wifi_password}) {
+    my $wpa_config = capture_output(
+      'wpa_passphrase',
+      $config{wifi_ssid},
+      $config{'wifi_password'}
+    );
 
-  my $blurb = get_blurb();
-
-  $network_config = <<"WPA";
+    $wpa_config = <<"WPA";
 # $blurb
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
-$network_config
+$wpa_config
 WPA
 
-  push @log, "Writing $conf_file";
+    push @log, "Writing $conf_file";
 
-  put_file(
-    $conf_file,
-    $network_config,
-    $conf_file . '.backup'
-  );
+    put_file($conf_file, $wpa_config, $conf_file . '.backup');
+  } else {
+    push @log, "No wifi_password defined, falling back to iwconfig.";
+    my $iwlog = capture_output(
+      'iwconfig',
+      'wlan0', # TODO: this of course is not always going to be the same...
+      'essid',
+      $config{wifi_ssid}
+    );
+  }
 
   return @log;
 }
@@ -267,6 +284,18 @@ sub get_blurb {
   return "This file is managed by $OCCI_CONFIG";
 }
 
+=item diag(@columns)
+
+Print columns of diagnostic output.
+
+=cut
+
+sub diag {
+  my ($depth, @cols) = @_;
+  print "\t" x $depth;
+  print join " :: ", @cols;
+  print "\n";
+}
 
 =item capture_output($command, @args)
 
