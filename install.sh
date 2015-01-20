@@ -50,5 +50,8 @@ fi
 # update package database
 apt-get update
 
+# stop asking me questions
+export DEBIAN_FRONTEND=noninteractive
+
 # install
 apt-get -y install occidentalis
