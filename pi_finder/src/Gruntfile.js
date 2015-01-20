@@ -14,6 +14,18 @@ module.exports = function(grunt) {
       },
       all: ['../build', '*.zip']
     },
+    rename: {
+      mac: {
+        files: [
+         { src: ['../build/darwin/atom-shell/Atom.app'], dest: '../build/darwin/atom-shell/Pi Bootstrap.app' }
+        ]
+      },
+      win: {
+        files: [
+         { src: ['../build/win32/atom-shell/atom.exe'], dest: '../build/win32/atom-shell/Pi Bootstrap.exe' }
+        ]
+      }
+    },
     compress: {
       options: {
         force: true
@@ -43,8 +55,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-atom-shell-app-builder');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-contrib-rename');
+  grunt.loadNpmTasks('grunt-plistbuddy');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('default', ['clean', 'build-atom-shell-app']);
+  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'rename']);
   grunt.registerTask('build', ['default', 'compress']);
 
 };
