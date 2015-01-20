@@ -55,3 +55,5 @@ export DEBIAN_FRONTEND=noninteractive
 
 # install
 apt-get -y install occidentalis
+
+echo "BOOTSTRAP COMPLETE!!!"
