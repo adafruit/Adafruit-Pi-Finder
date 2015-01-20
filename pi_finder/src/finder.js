@@ -94,9 +94,6 @@ proto.finish = function(cb, err, ips) {
     return cb(null, ip);
   }
 
-  // keep trying
-  setTimeout(function() {
-    this.start(cb);
-  }.bind(this), 1000);
+  cb();
 
 };
