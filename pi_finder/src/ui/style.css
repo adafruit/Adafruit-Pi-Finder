@@ -43,8 +43,14 @@ img {
 
 #ssh, #options {
   display: block;
-  width: 140px;
-  margin: 0 auto 20px auto;
+  width: 45%;
+  float:left;
+  padding: 0 10px;
+  margin-bottom: 20px;
+}
+
+.clear {
+ clear: both;
 }
 
 #terminal {

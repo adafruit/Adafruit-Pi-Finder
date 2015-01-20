@@ -13,7 +13,7 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
 
   main = new BrowserWindow({
-    width: 250,
+    width: 300,
     height: 360,
     resizable: false,
     'use-content-size': true
@@ -47,7 +47,7 @@ app.on('ready', function() {
 
     terminal.show();
     terminal.focus();
-    main.setSize(250, 360);
+    main.setSize(300, 360);
 
     config.pi_config = pi_config;
 
@@ -79,7 +79,9 @@ app.on('ready', function() {
 
     finder.start(function(err, ip) {
       main.webContents.send('found', ip);
-      main.setSize(250, 560);
+      main.setSize(500, 500);
+      main.focus();
+      main.center();
     });
 
   });
