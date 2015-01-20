@@ -10,43 +10,39 @@ occi is a simple utility for applying configuration settings like
 hostname and WiFi credentials to your Raspberry Pi.
 
 Settings are stored in a simple text file, usually
-F</boot/occidentalis.txt>.
+F</boot/occidentalis.txt>.  The format is:
+
+    hostname=brennenpi
+
+    # wifi configuration details:
+    wifi_ssid=Uniontown Labs
+    wifi_password=Code and Biko do not like cats.
+
+Blank lines and comments starting with C<#> will be ignored.
+
+See F</usr/share/doc/occi/occidentalis_example.txt> for a full example.
+
+=head1 SYNOPSIS
+
+    # apply configuration in /boot/occidentalis.txt
+    sudo occi
 
 =cut
 
-package OcciConfig v0.3.1;
+package OcciConfig v0.3.2;
 
 use warnings;
 use strict;
 
 use IPC::System::Simple qw(capturex);
 
-my $OCCI_CONFIG  = "/boot/occidentalis.txt";
-my %allowed_keys = map { $_ => 1} qw(hostname wifi_password wifi_ssid);
-
-# The $VERSION here comes from the package line above:
 diag(0, "Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}");
 
-# Make sure there's a config file available.
-unless (-f $OCCI_CONFIG) {
-  print <<"HELPTEXT";
-It looks like you don't have a $OCCI_CONFIG yet.
+my $OCCI_CONFIG  = "/boot/occidentalis.txt";
+my %config       = parse_config($OCCI_CONFIG);
+my %allowed_keys = map { $_ => 1} qw(hostname wifi_password wifi_ssid);
 
-In order to create one:
-
-    sudo nano $OCCI_CONFIG
-
-And then add configuration keys like:
-
-    hostname=somepi
-
-See /usr/share/doc/occi/occidentalis_example.txt for a full example.
-HELPTEXT
-
-  exit 1;
-}
-
-my %config = parse_config($OCCI_CONFIG);
+have_config_or_die($OCCI_CONFIG);
 
 diag(1, 'file', $OCCI_CONFIG);
 my @errors;
@@ -54,12 +50,8 @@ foreach my $key (sort keys %config) {
   if ($allowed_keys{$key}) {
     diag(2, 'valid', $key, $config{$key});
   } else {
-    push @errors, $key;
+    diag(2, 'error', $key, "unrecognized configuration key");
   }
-}
-
-foreach my $err (@errors) {
-  diag(2, 'error', $err, "unrecognized configuration key");
 }
 
 {
@@ -316,6 +308,34 @@ sub diag {
   print "\t" x $depth;
   print join " :: ", @cols;
   print "\n";
+}
+
+=item have_config_or_die($path)
+
+Check that a given config file exists, and exit with some documentation if not.
+
+=cut
+
+sub have_config_or_die {
+  my ($file) = @_;
+
+  return 1 if -f $file;
+
+  print <<"HELPTEXT";
+It looks like you don't have a $OCCI_CONFIG yet.
+
+In order to create one:
+
+    sudo nano $OCCI_CONFIG
+
+And then add configuration keys like:
+
+    hostname=somepi
+
+See /usr/share/doc/occi/occidentalis_example.txt for a full example.
+HELPTEXT
+
+  exit 1;
 }
 
 
