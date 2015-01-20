@@ -50,7 +50,6 @@ app.on('ready', function() {
     terminal.focus();
     main.setSize(250, 360);
 
-    config.install_command = 'cat /boot/occidentalis.txt'; // TODO kill
     config.pi_config = pi_config;
 
     var ssh = SSH(config);
@@ -65,17 +64,8 @@ app.on('ready', function() {
     });
 
     ssh.on('done', function() {
-
       main.webContents.send('bootstrap', 'Bootstrap successful!<br>');
-
-      if(terminal) {
-        //terminal.close();
-      }
-
-      if(main) {
-        main.focus();
-      }
-
+      main.focus();
     });
 
   });
