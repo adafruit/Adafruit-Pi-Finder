@@ -1,0 +1,7 @@
+occidentalis (0.3.9) unstable; urgency=low
+
+ * Adds occi run to postinst
+ * Adds changelog
+ * Adds avahi-daemon restart to postinst
+
+ -- Todd Treece <todd@uniontownlabs.org>  Tue, 20 Jan 2015 14:19:00 -0500
