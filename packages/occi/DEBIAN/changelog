@@ -1,4 +1,10 @@
-occi (0.2.1) unstable; urgency=low
+occi (0.3.2) unstable; urgency=low
+
+ * Improve documentation
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Tue, 20 Jan 2015 15:35:00 -0700
+
+occi (0.3.1) unstable; urgency=low
 
  * Removes occi run from postinst
 
