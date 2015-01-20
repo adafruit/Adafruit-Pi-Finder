@@ -91,8 +91,8 @@ proto.buildCommand = function() {
   // only change txt config file if the user passes options via the UI
   if(options) {
     command = 'if [ -f /boot/occidentalis.txt ]; ';
-    command += 'then sudo cp /boot/occidentalis.txt{,.bak}; fi; && ';
-    command += 'echo "' + options + '" | sudo tee /boot/occidentalis.txt && ';
+    command += 'then sudo cp /boot/occidentalis.txt{,.bak}; fi && ';
+    command += 'echo -e "' + options + '" | sudo tee /boot/occidentalis.txt && ';
   }
 
   command += this.install_command;
