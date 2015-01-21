@@ -39,22 +39,10 @@ module.exports = function(grunt) {
       }
     },
     plistbuddy: {
-      bundleIdent: {
-        method: 'Set',
-        entry: ':CFBundleIdentifier',
-        value: 'com.adafruit.pifinder',
-        src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
-      },
       bundleDisplay: {
         method: 'Set',
         entry: ':CFBundleDisplayName',
         value: 'Pi Bootstrap',
-        src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
-      },
-      bundleName: {
-        method: 'Set',
-        entry: ':CFBundleName',
-        value: 'Pi Finder',
         src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
       }
     },
