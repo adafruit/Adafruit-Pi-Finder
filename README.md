@@ -3,13 +3,15 @@
 The goal of this project is to make a version of [Occidentalis][1] that
 is distributed as a Debian package instead of an image.
 
+## TODO - Info about /boot/occidentalis.txt
+
 ## Finding the Pi & Starting the Boostrap
 
 We have created a utility that will find a Raspberry Pi connected to your
 local network and start the bootstrap process. The utility requires you to
 connect your Pi to your local network **via an ethernet cable**.
 
-Windows & Mac UI:
+Windows & Mac App:
 
 [Download the latest release][2] of the Pi Bootstrap utility.
 
