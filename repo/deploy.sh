@@ -15,7 +15,7 @@ make
 # sign packages, and add them to the repo
 dpkg-sig -k $GPG_KEY --sign builder $TEMP_DIR/build/*.deb
 cd /var/packages/raspbian/
-reprepro includedeb wheezy $TEMP_DIR/build/*.deb 2>/dev/null
+reprepro includedeb wheezy $TEMP_DIR/build/*.deb
 
 # clean up
 rm -r $TEMP_DIR
