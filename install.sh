@@ -41,7 +41,7 @@ if grep -Fq "adafruit" /etc/apt/sources.list; then
   echo "adafruit repo already added to apt sources"
 else
   # add apt repo to sources.list
-  echo "deb https://apt.adafruit.com/raspbian/ wheezy main" >> /etc/apt/sources.list
+  echo "deb http://apt.adafruit.com/raspbian/ wheezy main" >> /etc/apt/sources.list
 
   # import repo key
   wget -O - -q https://apt.adafruit.com/apt.adafruit.com.gpg.key | apt-key add -
