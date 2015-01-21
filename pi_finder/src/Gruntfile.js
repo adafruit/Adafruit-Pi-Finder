@@ -64,21 +64,21 @@ module.exports = function(grunt) {
       },
       mac: {
         options: {
-          archive: 'mac_osx.zip'
+          archive: 'pibootstrap_mac.zip'
         },
         expand: true,
         cwd: '../build/darwin/atom-shell/',
         src: ['**'],
-        dest: 'occidentalis/'
+        dest: 'pi_bootstrap/'
       },
       windows: {
         options: {
-          archive: 'windows.zip'
+          archive: 'pibootstrap_windows.zip'
         },
         expand: true,
         cwd: '../build/win32/atom-shell/',
         src: ['**'],
-        dest:'occidentalis/'
+        dest:'pi_bootstrap/'
       }
     }
 
