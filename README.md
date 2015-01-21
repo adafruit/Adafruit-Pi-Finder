@@ -3,16 +3,20 @@
 The goal of this project is to make a version of [Occidentalis][1] that
 is distributed as a Debian package instead of an image.
 
-## Finding the Pi
+## Finding the Pi & Starting the Boostrap
 
-Windows & Mac:
+We have created a utility that will find a Raspberry Pi connected to your
+local network and start the bootstrap process. The utility requires you to
+connect your Pi to your local network **via an ethernet cable**.
 
-[Download the latest release][2] of the Occidentalis Bootstrap utility.
+Windows & Mac UI:
 
-Linux:
+[Download the latest release][2] of the Pi Bootstrap utility.
+
+Linux (or Mac):
 
 ```sh
-$ curl -SLs http://bootstrap.uniontownlabs.org | bash
+$ curl -SLs https://apt.adafruit.com/bootstrap | bash
 ```
 
 [1]: https://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-2
