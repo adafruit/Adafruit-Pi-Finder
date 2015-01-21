@@ -26,6 +26,38 @@ module.exports = function(grunt) {
         ]
       }
     },
+    copy: {
+      mac: {
+        files: [
+          { src: 'icons/adafruit.icns', dest: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Resources/atom.icns' }
+        ]
+      },
+      win: {
+        files: [
+          { src: 'icons/adafruit.ico', dest: '../build/win32/atom-shell/adafruit.ico' }
+        ]
+      }
+    },
+    plistbuddy: {
+      bundleIdent: {
+        method: 'Set',
+        entry: ':CFBundleIdentifier',
+        value: 'com.adafruit.pifinder',
+        src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
+      },
+      bundleDisplay: {
+        method: 'Set',
+        entry: ':CFBundleDisplayName',
+        value: 'Pi Bootstrap',
+        src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
+      },
+      bundleName: {
+        method: 'Set',
+        entry: ':CFBundleName',
+        value: 'Pi Finder',
+        src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
+      }
+    },
     compress: {
       options: {
         force: true
@@ -59,7 +91,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-plistbuddy');
   grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'rename']);
+  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'rename', 'copy', 'plistbuddy']);
   grunt.registerTask('build', ['default', 'compress']);
 
 };
