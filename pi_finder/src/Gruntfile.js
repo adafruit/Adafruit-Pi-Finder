@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       },
       win: {
         files: [
-         { src: ['../build/win32/atom-shell/atom.exe'], dest: '../build/win32/atom-shell/Pi Bootstrap.exe' }
+         { src: ['../build/win32/atom-shell/atom.exe'], dest: '../build/win32/atom-shell/PiBootstrap.exe' }
         ]
       }
     },
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
       },
       win: {
         files: [
-          { src: 'icons/adafruit.ico', dest: '../build/win32/atom-shell/adafruit.ico' }
+          { src: 'icons/adafruit.ico', dest: '../build/win32/atom-shell/resources/adafruit.ico' }
         ]
       }
     },
@@ -44,6 +44,16 @@ module.exports = function(grunt) {
         entry: ':CFBundleDisplayName',
         value: 'Pi Bootstrap',
         src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
+      }
+    },
+    winresourcer: {
+      exe: {
+        operation: 'Update',
+        exeFile: '../build/win32/atom-shell/PiBootstrap.exe',
+        resourceType: 'Icongroup',
+        resourceName: '1',
+        lang: 1033,
+        resourceFile: 'icons/adafruit.ico'
       }
     },
     compress: {
@@ -78,8 +88,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-rename');
   grunt.loadNpmTasks('grunt-plistbuddy');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('winresourcer');
 
-  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'rename', 'copy', 'plistbuddy']);
+  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'rename', 'copy', 'plistbuddy', 'winresourcer']);
   grunt.registerTask('build', ['default', 'compress']);
 
 };
