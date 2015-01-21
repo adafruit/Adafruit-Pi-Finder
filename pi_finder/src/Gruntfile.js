@@ -44,6 +44,12 @@ module.exports = function(grunt) {
         entry: ':CFBundleDisplayName',
         value: 'Pi Bootstrap',
         src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
+      },
+      bundleName: {
+        method: 'Set',
+        entry: ':CFBundleName',
+        value: 'Pi Bootstrap',
+        src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
       }
     },
     winresourcer: {
@@ -67,7 +73,7 @@ module.exports = function(grunt) {
         expand: true,
         cwd: '../build/darwin/atom-shell/',
         src: ['**'],
-        dest: 'pi_bootstrap/'
+        dest: './'
       },
       windows: {
         options: {
@@ -76,7 +82,7 @@ module.exports = function(grunt) {
         expand: true,
         cwd: '../build/win32/atom-shell/',
         src: ['**'],
-        dest:'pi_bootstrap/'
+        dest:'./'
       }
     }
 
