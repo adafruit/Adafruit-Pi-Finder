@@ -40,7 +40,7 @@ proto.username = 'pi';
 proto.password = 'raspberry';
 proto.host = '10.0.1.1';
 proto.port = 22;
-proto.install_command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
+proto.install_command = 'curl -SLs https://apt.adafruit.com/bootstrap | sudo bash';
 proto.pi_config = {};
 
 proto.handleError = function(err) {
