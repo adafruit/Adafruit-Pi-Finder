@@ -2,31 +2,59 @@
 <html>
 
   <head>
-    <title>Terminal</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>SSH Terminal</title>
+    <style>
+      html {
+        background: #010;
+        font-family: courier;
+      }
+      .terminal {
+        width: 630px;
+        height: 450px;
+        border: none;
+      }
+      .terminal-cursor {
+        color: #000;
+        background: #f0f0f0;
+      }
+    </style>
   </head>
 
   <body>
-
-    <pre id="terminal"></pre>
-
     <script>
+      var ipc = require('ipc'),
+          Terminal = require('./term.js'),
+          timer;
 
-      var ipc = require('ipc');
-      window.$ = window.jQuery = require('./jquery.js');
-
-      ipc.on('stdout', function(arg) {
-        $('#terminal').append(arg);
-        $('html, body').animate({ scrollTop: $(document).height() }, 0);
+      var term = new Terminal({
+        cols: 80,
+        rows:31,
+        screenKeys: true,
+        useStyle: true,
+        cursorBlink: true
       });
 
-      ipc.on('stderr', function(arg) {
-        $('#terminal').append('<span class="error">' + arg + '</span>\n');
-        $('html, body').animate({ scrollTop: $(document).height() }, 0);
+      term.on('data', function(data) {
+        ipc.send('stdin', data);
       });
 
-      $(document).on('ready', function() {
-        $('html, body').animate({ scrollTop: $(document).height() }, 0);
+      term.on('title', function(title) {
+        document.title = title;
+      });
+
+      term.open(document.body);
+
+      ipc.on('stdout', function(data) {
+        term.write(data);
+      });
+
+      ipc.on('stderr', function(data) {
+        term.write(data);
+      });
+
+      ipc.on('disconnect', function() {
+        ipc.send('disconnect', true);
+        term.reset();
       });
 
     </script>

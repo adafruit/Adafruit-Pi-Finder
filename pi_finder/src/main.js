@@ -20,10 +20,11 @@ app.on('ready', function() {
   });
 
   terminal = new BrowserWindow({
-    width: 600,
-    height: 400,
+    width: 640,
+    height: 384,
     resizable: false,
-    show: false
+    show: false,
+    'use-content-size': true
   });
 
   main.loadUrl('file://' + __dirname + '/ui/main.html');
@@ -39,20 +40,43 @@ app.on('ready', function() {
 
   });
 
-  terminal.on('closed', function() {
-    terminal = null;
+  terminal.on('close', function(e) {
+
+    if(main) {
+      e.preventDefault();
+      main.setSize(500, 500);
+      terminal.hide();
+      main.webContents.send('reset', false);
+      terminal.webContents.send('disconnect', true);
+    }
+
   });
 
-  ipc.on('bootstrap', function(e, config, pi_config) {
+  ipc.on('connect', function(e, config) {
 
     terminal.show();
     terminal.focus();
     main.setSize(300, 360);
 
-    config.pi_config = pi_config;
+    main.webContents.send('working', 'Connecting');
 
-    var ssh = SSH(config),
-        timer = working('Bootstrapping');
+    var ssh = SSH(config);
+
+    ipc.on('stdin', function(e, data) {
+      if(ssh) {
+        ssh.write(data);
+      }
+    });
+
+    ipc.on('disconnect', function() {
+      if(ssh) {
+        ssh.end();
+      }
+    });
+
+    ssh.once('data', function() {
+      main.webContents.send('status', 'Connected.');
+    });
 
     ssh.on('data', function(data) {
       terminal.webContents.send('stdout', data);
@@ -63,21 +87,25 @@ app.on('ready', function() {
     });
 
     ssh.on('done', function() {
-      clearInterval(timer);
-      main.webContents.send('bootstrap', 'Bootstrap successful!<br>');
-      main.focus();
+
+      ssh = null;
+
+      if(terminal.isVisible()) {
+        terminal.close();
+        main.focus();
+      }
+
     });
 
   });
 
   ipc.on('find', function(e, arg) {
 
-    var finder = Finder(),
-        timer = working('Searching');
+    var finder = Finder();
+
+    main.webContents.send('working', 'Searching');
 
     finder.start(function(err, ip) {
-
-      clearInterval(timer);
 
       if(!ip) {
         return main.webContents.send('reset', true);
@@ -93,23 +121,3 @@ app.on('ready', function() {
   });
 
 });
-
-function working(message) {
-
-  var count = 1;
-
-  var timer = setInterval(function() {
-
-    if(count > 3) {
-      count = 1;
-    }
-
-    main.webContents.send('status', message + Array(count + 1).join('.'));
-
-    count++;
-
-  }, 200);
-
-  return timer;
-
-}

@@ -79,21 +79,24 @@ proto.arp = function(host, next) {
 
 proto.finish = function(cb, err, ips) {
 
-  var ip = false;
+  var results = [];
+
+  if(err) {
+    return cb(err);
+  }
 
   if(Array.isArray(ips)) {
 
-    // loop through ips and check for values
-    ips.forEach(function(i) {
-      if(i) ip = i;
+    results = ips.filter(function(i) {
+      return i;
     });
 
   }
 
-  if(ip) {
-    return cb(null, ip);
+  if(! results.length) {
+    return cb();
   }
 
-  cb();
+  cb(null, results);
 
 };

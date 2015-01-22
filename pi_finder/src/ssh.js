@@ -36,11 +36,13 @@ function ssh(options) {
 }
 
 proto.ssh = false;
+proto.stdin = false;
 proto.username = 'pi';
 proto.password = 'raspberry';
 proto.host = '10.0.1.1';
 proto.port = 22;
-proto.install_command = 'curl -SLs https://apt.adafruit.com/install | sudo bash';
+proto.bootstrap = false;
+proto.install_command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
 proto.pi_config = {};
 
 proto.handleError = function(err) {
@@ -53,16 +55,84 @@ proto.handleData = function(data) {
 
 proto.handleClose = function() {
   this.emit('done', 'done');
+};
+
+proto.write = function(data) {
+
+  if(! this.stdin) {
+    return;
+  }
+
+  this.stdin.write(data);
+
+};
+
+proto.end = function() {
+
+  if(! this.stdin) {
+    return;
+  }
+
   this.ssh.end();
+
 };
 
 proto.handleReady = function() {
 
-  this.ssh.exec(this.buildCommand(), function(err, stream) {
+  if(this.bootstrap) {
+    return this.boot();
+  }
+
+  this.shell();
+
+};
+
+proto.boot = function() {
+
+  var opts = {
+    pty: {
+      rows: 31,
+      cols: 80,
+      height: 384,
+      width: 640,
+      term: 'xterm-color'
+    }
+  };
+
+  this.ssh.exec(this.buildCommand(), opts, function(err, stream) {
 
     if(err) {
       return this.handleError(err);
     }
+
+    this.stdin = stream;
+
+    stream.on('error', this.handleError.bind(this));
+    stream.on('data', this.handleData.bind(this));
+    stream.on('close', this.handleClose.bind(this));
+    stream.stderr.on('data', this.handleError.bind(this));
+
+  }.bind(this));
+
+};
+
+proto.shell = function() {
+
+  var win = {
+    rows: 31,
+    cols: 80,
+    height: 384,
+    width: 640,
+    term: 'xterm-color'
+  };
+
+  this.ssh.shell(win, function(err, stream) {
+
+    if(err) {
+      return this.handleError(err);
+    }
+
+    this.stdin = stream;
 
     stream.on('error', this.handleError.bind(this));
     stream.on('data', this.handleData.bind(this));
