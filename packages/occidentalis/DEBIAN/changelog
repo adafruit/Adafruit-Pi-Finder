@@ -1,3 +1,10 @@
+occidentalis (0.5.1) unstable; urgency=low
+
+  * Turn on i2c & spi kernel modules via postinst
+  * Only add samba config if it hasn't been added yet 
+
+ -- Todd Treece <todd@uniontownlabs.org>  Thu, 22 Jan 2015 01:36:01 +0000
+
 occidentalis (0.5.0) unstable; urgency=low
 
   * Adds samba dependency

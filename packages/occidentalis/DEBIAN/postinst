@@ -2,19 +2,35 @@
 occi
 service avahi-daemon restart
 service netatalk restart
-cp /etc/samba/smb.conf /etc/samba/smb.conf.backup
-sed -i "s/.*workgroup[[:space:]]=.*/workgroup = WORKGROUP/" /etc/samba/smb.conf
-sed -i "s/.*wins[[:space:]]support[[:space:]]=.*/wins support = yes/" /etc/samba/smb.conf
-echo -ne "raspberry\n" | tee - | smbpasswd -a -s pi
-cat << "EOF" >> /etc/samba/smb.conf
-[pihome]
-   comment= Pi Home
-   path=/home/pi
-   browseable=Yes
-   writeable=Yes
-   only guest=no
-   create mask=0777
-   directory mask=0777
-   public=no
+
+# MODULES
+sed -i /etc/modprobe.d/raspi-blacklist.conf -e "s/^blacklist[[:space:]]*spi-bcm2708.*/#blacklist spi-bcm2708/"
+modprobe spi-bcm2708
+sed -i /etc/modprobe.d/raspi-blacklist.conf -e "s/^blacklist[[:space:]]*i2c-bcm2708.*/#blacklist i2c-bcm2708/"
+modprobe i2c-bcm2708
+sed -i /etc/modprobe.d/raspi-blacklist.conf -e "s/^blacklist[[:space:]]*i2c-dev.*/#blacklist i2c-dev/"
+modprobe i2c-dev
+
+if ! grep -Fq "i2c-dev" /etc/modules; then
+  echo -e "i2c-bcm2708\ni2c-dev" >> /etc/modules
+fi
+
+# SAMBA
+if ! grep -Fq "pihome" /etc/samba/smb.conf; then
+  cp /etc/samba/smb.conf /etc/samba/smb.conf.backup
+  sed -i "s/.*workgroup[[:space:]]=.*/workgroup = WORKGROUP/" /etc/samba/smb.conf
+  sed -i "s/.*wins[[:space:]]support[[:space:]]=.*/wins support = yes/" /etc/samba/smb.conf
+  echo -ne "raspberry\n" | tee - | smbpasswd -a -s pi
+  cat << "EOF" >> /etc/samba/smb.conf
+  [pihome]
+     comment= Pi Home
+     path=/home/pi
+     browseable=Yes
+     writeable=Yes
+     only guest=no
+     create mask=0777
+     directory mask=0777
+     public=no
 EOF
-service samba restart
+  service samba restart
+fi
