@@ -19,11 +19,15 @@ Linux (or Mac):
 $ curl -SLs https://apt.adafruit.com/bootstrap | bash
 ```
 
+## occidentalis.txt
+
 Occidentalis comes with a configuration helper script called `occi`, which may
-be used to set various system options from a text file on your SD card.  The
-bootstrapping process will help you create this file, if you want, or it can be
-created as `occidentalis.txt` on the card at any time.  When the Pi is running,
-edit `/boot/occidentalis.txt`.
+be used to set various system options from a text file on your SD card.
+
+The bootstrapping process will help you create the file by prompting for your
+desired hostname and wifi credentials, but it can also be created as
+`occidentalis.txt` on the card at any time.  When the Pi is running, edit
+`/boot/occidentalis.txt`.
 
 ![screencast of opening occidentalis.txt in nano](https://raw.githubusercontent.com/adafruit/pi_bootstrap/master/docs/edit_occi_settings.gif)
 
@@ -36,6 +40,16 @@ hostname=mypiname
 # basic wireless networking options:
 wifi_ssid=your network here
 wifi_password=your password / passphrase here
+```
+
+Right now, these are the only configuration values supported.  Others will
+be added in time.
+
+By default, `occi` will run whenver the Pi boots, but can also be run manually
+with:
+
+```
+sudo occi
 ```
 
 [1]: https://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-2
