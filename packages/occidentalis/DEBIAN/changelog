@@ -1,3 +1,9 @@
+occidentalis (0.5.2) unstable; urgency=low
+
+  * Adds occi 0.3.3 dependency.
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Thu, 22 Jan 2015 13:58:00 -0700
+
 occidentalis (0.5.1) unstable; urgency=low
 
   * Turn on i2c & spi kernel modules via postinst
