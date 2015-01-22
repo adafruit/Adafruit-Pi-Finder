@@ -36,11 +36,12 @@ function ssh(options) {
 }
 
 proto.ssh = false;
+proto.stdin = false;
 proto.username = 'pi';
 proto.password = 'raspberry';
 proto.host = '10.0.1.1';
 proto.port = 22;
-proto.install_command = 'curl -SLs https://apt.adafruit.com/install | sudo bash';
+proto.install_command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
 proto.pi_config = {};
 
 proto.handleError = function(err) {
@@ -56,13 +57,43 @@ proto.handleClose = function() {
   this.ssh.end();
 };
 
+proto.write = function(data) {
+
+  if(! this.stdin) {
+    return;
+  }
+
+  this.stdin.write(data);
+
+};
+
+proto.end = function(data) {
+
+  if(! this.stdin) {
+    return;
+  }
+
+  this.stdin.end(data);
+
+};
+
 proto.handleReady = function() {
 
-  this.ssh.exec(this.buildCommand(), function(err, stream) {
+  var win = {
+    rows: 31,
+    cols: 80,
+    height: 384,
+    width: 640,
+    term: 'xterm-color'
+  };
+
+  this.ssh.shell(win, function(err, stream) {
 
     if(err) {
       return this.handleError(err);
     }
+
+    this.stdin = stream;
 
     stream.on('error', this.handleError.bind(this));
     stream.on('data', this.handleData.bind(this));
