@@ -12,6 +12,7 @@ fi
 # copy the packages to a temp folder, build them:
 TEMP_DIR=`mktemp -d`
 cp -r $1/packages/* $TEMP_DIR
+mkdir $TEMP_DIR/build
 cd $TEMP_DIR
 make
 
@@ -22,7 +23,7 @@ fi
 
 # cache the node deb
 if [ ! -f /tmp/deb_cache/$NODE_DEB ]; then
-  wget -P /tmp/deb_cache/ http://node-arm.herokuapp.com/$NODE_DEB
+  wget http://node-arm.herokuapp.com/node_latest_armhf.deb -O /tmp/deb_cache/$NODE_DEB
 fi
 # cache the webide deb
 if [ ! -f /tmp/deb_cache/$IDE_DEB ]; then
@@ -40,7 +41,7 @@ cd /var/packages/raspbian/
 reprepro -V remove wheezy node
 reprepro -V remove wheezy occi
 reprepro -V remove wheezy occidentalis
-
+reprepro -V remove wheezy adafruitwebide
 reprepro includedeb wheezy $TEMP_DIR/build/*.deb
 
 # clean up
