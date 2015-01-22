@@ -19,13 +19,13 @@ Linux (or Mac):
 $ curl -SLs https://apt.adafruit.com/bootstrap | bash
 ```
 
-## occi Configuration Helper
-
 Occidentalis comes with a configuration helper script called `occi`, which may
 be used to set various system options from a text file on your SD card.  The
 bootstrapping process will help you create this file, if you want, or it can be
 created as `occidentalis.txt` on the card at any time.  When the Pi is running,
 edit `/boot/occidentalis.txt`.
+
+![screencast of opening occidentalis.txt in nano](https://raw.githubusercontent.com/adafruit/pi_bootstrap/master/docs/edit_occi_settings.gif)
 
 Here's an example file:
 
