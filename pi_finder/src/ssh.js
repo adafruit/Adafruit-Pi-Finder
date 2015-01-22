@@ -67,7 +67,7 @@ proto.write = function(data) {
 
 };
 
-proto.end = function(data) {
+proto.end = function() {
 
   if(! this.stdin) {
     return;
@@ -78,6 +78,45 @@ proto.end = function(data) {
 };
 
 proto.handleReady = function() {
+
+  if(this.bootstrap) {
+    return this.boot();
+  }
+
+  this.shell();
+
+};
+
+proto.boot = function() {
+
+  var opts = {
+    pty: {
+      rows: 31,
+      cols: 80,
+      height: 384,
+      width: 640,
+      term: 'xterm-color'
+    }
+  };
+
+  this.ssh.exec(this.buildCommand(), opts, function(err, stream) {
+
+    if(err) {
+      return this.handleError(err);
+    }
+
+    this.stdin = stream;
+
+    stream.on('error', this.handleError.bind(this));
+    stream.on('data', this.handleData.bind(this));
+    stream.on('close', this.handleClose.bind(this));
+    stream.stderr.on('data', this.handleError.bind(this));
+
+  }.bind(this));
+
+};
+
+proto.shell = function() {
 
   var win = {
     rows: 31,
@@ -94,14 +133,6 @@ proto.handleReady = function() {
     }
 
     this.stdin = stream;
-
-    if(this.bootstrap) {
-
-      stream.once('data', function() {
-        stream.write(this.buildCommand() + '\n');
-      }.bind(this));
-
-    }
 
     stream.on('error', this.handleError.bind(this));
     stream.on('data', this.handleData.bind(this));
