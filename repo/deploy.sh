@@ -15,6 +15,12 @@ make
 # sign packages, and add them to the repo
 dpkg-sig -k $GPG_KEY --sign builder $TEMP_DIR/build/*.deb
 cd /var/packages/raspbian/
+
+# this is a hack - TODO, investigate why these packages differ
+reprepro -V remove wheezy node
+reprepro -V remove wheezy occi
+reprepro -V remove wheezy occidentalis
+
 reprepro includedeb wheezy $TEMP_DIR/build/*.deb
 
 # clean up
