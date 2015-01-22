@@ -41,6 +41,7 @@ proto.username = 'pi';
 proto.password = 'raspberry';
 proto.host = '10.0.1.1';
 proto.port = 22;
+proto.bootstrap = false;
 proto.install_command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
 proto.pi_config = {};
 
@@ -94,6 +95,14 @@ proto.handleReady = function() {
     }
 
     this.stdin = stream;
+
+    if(this.bootstrap) {
+
+      stream.once('data', function() {
+        stream.write(this.buildCommand());
+      }.bind(this));
+
+    }
 
     stream.on('error', this.handleError.bind(this));
     stream.on('data', this.handleData.bind(this));
