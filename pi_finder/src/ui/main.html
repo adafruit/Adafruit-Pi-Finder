@@ -11,11 +11,12 @@
 
     <div id="ssh" class="hide">
       <label>IP Address:</label>
-      <input name="host" value="">
+      <select name="host"></select>
       <label>SSH User:</label>
       <input name="username" value="pi">
       <label>SSH Password</label>
       <input name="password" value="raspberry">
+      <a id="connect">SSH Terminal</a>
     </div>
 
     <div id="options" class="hide">
@@ -25,50 +26,109 @@
       <input name="wifi_ssid" placeholder="ssid">
       <label>WiFi Password</label>
       <input name="wifi_password" placeholder="******">
+      <a id="bootstrap">Bootstrap!</a>
     </div>
 
     <div class="clear"></div>
 
     <a id="find">Find My Pi!</a>
-    <a id="bootstrap" class="hide">Bootstrap!</a>
 
     <script>
 
-      var ipc = require('ipc');
+      var ipc = require('ipc'),
+          timer;
+
       window.$ = window.jQuery = require('./jquery.js');
 
       $(document).on('ready', function() {
 
         $('#find').click(function() {
-          $(this).hide();
+          $(this).addClass('hide');
           ipc.send('find');
         });
 
         $('#bootstrap').click(function() {
-          $(this).hide();
-          $('#ssh, #options').hide();
-          ipc.send('bootstrap', get_ssh(), get_options());
+
+          $('#ssh, #options').addClass('hide');
+
+          var options = get_ssh();
+
+          options.pi_config = get_options();
+          options.bootstrap = true;
+
+          ipc.send('connect', options);
+
+        });
+
+        $('#connect').click(function() {
+
+          $('#ssh, #options').addClass('hide');
+
+          var options = get_ssh();
+
+          ipc.send('connect', options);
+
         });
 
       });
 
-      ipc.on('reset', function() {
-        $('#find').show();
-        $('#status').html('Your Pi could not be found. Is it plugged in via ethernet?');
+      ipc.on('reset', function(not_found) {
+
+        if(not_found) {
+
+          if(timer) {
+            clearInterval(timer);
+            timer = null;
+          }
+
+          $('#find').removeClass('hide');
+          return $('#status').html('Your Pi could not be found. Is it plugged in via ethernet?');
+
+        }
+
+        $('#status').html('');
+        $('#options, #ssh').removeClass('hide');
+
       });
 
       ipc.on('found', function(arg) {
-        $('#options, #ssh, #bootstrap').removeClass('hide');
-        $('input[name=host]').val(arg);
-        $('#status').html('Found Pi at: ' + arg);
+
+        if(timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+
+        $('#options, #ssh').removeClass('hide');
+        $('select[name=host]').html('');
+
+        arg.forEach(function(ip) {
+          $('select[name=host]').append('<option>' + ip + '</option>');
+        });
+
+        $('#status').html('Found!');
+
       });
 
-      ipc.on('bootstrap', function(arg) {
-        $('#status').html(arg);
+      ipc.on('working', function(data) {
+
+        if(timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+
+        timer = working(data);
+
       });
 
       ipc.on('status', function(arg) {
+
+        if(timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+
         $('#status').html(arg);
+
       });
 
       function get_options() {
@@ -93,11 +153,31 @@
 
         var options = {};
 
-        $('#ssh input').each(function() {
+        $('#ssh input, #ssh select').each(function() {
           options[$(this).attr('name')] = $(this).val();
         });
 
         return options;
+
+      }
+
+      function working(message) {
+
+        var count = 1;
+
+        var t = setInterval(function() {
+
+          if(count > 3) {
+            count = 1;
+          }
+
+          $('#status').html(message + Array(count + 1).join('.'));
+
+          count++;
+
+        }, 500);
+
+        return t;
 
       }
 

@@ -11,22 +11,25 @@ img {
   margin: 30px auto;
 }
 
-#find, #bootstrap {
+#find, #bootstrap, #connect {
   text-align: center;
   box-sizing: border-box;
   display: block;
   height: 29px;
   text-decoration: none;
-  width: 140px;
+  width: 60%;
   perspective-origin: 51px 14.5px;
   transform-origin: 51px 14.5px;
   background: rgb(0, 172, 236);
-  border: 0px none rgb(255, 255, 255);
   font-size: 16px;
   margin: 0px auto;
-  outline: rgb(255, 255, 255) none 0px;
   padding: 6px 10px;
   cursor: pointer;
+}
+
+#bootstrap, #connect {
+  margin: 20px auto 0 auto;
+  width: 100%;
 }
 
 #find {
@@ -75,7 +78,7 @@ label {
   margin-top: 10px;
 }
 
-input {
+input, select {
   display: block;
   width: 100%;
 }

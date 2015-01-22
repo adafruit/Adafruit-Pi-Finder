@@ -55,7 +55,6 @@ proto.handleData = function(data) {
 
 proto.handleClose = function() {
   this.emit('done', 'done');
-  this.ssh.end();
 };
 
 proto.write = function(data) {
@@ -74,7 +73,7 @@ proto.end = function(data) {
     return;
   }
 
-  this.stdin.end(data);
+  this.ssh.end();
 
 };
 
@@ -99,7 +98,7 @@ proto.handleReady = function() {
     if(this.bootstrap) {
 
       stream.once('data', function() {
-        stream.write(this.buildCommand());
+        stream.write(this.buildCommand() + '\n');
       }.bind(this));
 
     }
