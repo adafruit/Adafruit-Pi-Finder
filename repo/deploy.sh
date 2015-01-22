@@ -29,6 +29,9 @@ if [ ! -f /tmp/deb_cache/$IDE_DEB ]; then
   wget -P /tmp/deb_cache/ http://adafruit-download.s3.amazonaws.com/$IDE_DEB
 fi
 
+# copy all of the cached debs into the build dir
+cp /tmp/deb_cache/*.deb $TEMP_DIR/build
+
 # sign packages, and add them to the repo
 dpkg-sig -k $GPG_KEY --sign builder $TEMP_DIR/build/*.deb
 cd /var/packages/raspbian/
