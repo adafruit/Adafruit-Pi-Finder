@@ -29,7 +29,7 @@ See F</usr/share/doc/occi/occidentalis_example.txt> for a full example.
 
 =cut
 
-package OcciConfig v0.3.3;
+package OcciConfig v0.3.4;
 
 use warnings;
 use strict;
@@ -106,6 +106,8 @@ sub handle_hostname {
 
   my @log;
 
+  my $hostname_changed = 0;
+
   # What's the existing configuration?
   chomp(my $existing_etc_hostname = get_file('/etc/hostname'));
   chomp(my $existing_hostname = capture_string('hostname'));
@@ -114,12 +116,14 @@ sub handle_hostname {
     # Make sure this is set correctly at next boot
     push @log, 'Setting /etc/hostname to ' . $config{hostname};
     put_file('/etc/hostname', $config{hostname});
+    $hostname_changed = 1;
   }
 
   unless ($existing_hostname eq $config{hostname}) {
     # Make sure this is set correctly right _now_.
     push @log, 'Setting current hostname to ' . $config{hostname};
     system('hostname', $config{hostname});
+    $hostname_changed = 1;
   }
 
   # Make sure our new hostname is mentioned in /etc/hosts:
@@ -133,6 +137,12 @@ sub handle_hostname {
   if ($etc_hosts ne $new_etc_hosts) {
     push @log, 'Adding ' . $config_hostline . ' to /etc/hosts';
     put_file('/etc/hosts', $new_etc_hosts);
+    $hostname_changed = 1;
+  }
+
+  if ($hostname_changed && (-f '/etc/init.d/avahi-daemon')) {
+    push @log, 'restarting avahi-daemon';
+    push @log, capture_list('service', 'avahi-daemon', 'restart');
   }
 
   return @log;

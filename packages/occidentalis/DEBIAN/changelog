@@ -1,3 +1,9 @@
+occidentalis (0.5.3) unstable; urgency=low
+
+  * Adds occi 0.3.4 dependency (avahi restart).
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Thu, 22 Jan 2015 14:44:00 -0700
+
 occidentalis (0.5.2) unstable; urgency=low
 
   * Adds occi 0.3.3 dependency.

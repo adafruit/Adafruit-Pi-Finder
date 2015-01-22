@@ -1,3 +1,9 @@
+occi (0.3.4) unstable; urgency=low
+
+ * Adds avahi-daemon restart to handle_hostname()
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Thu, 22 Jan 2015 14:44:00 -0700
+
 occi (0.3.3) unstable; urgency=low
 
  * Adds wpa_supplicant restart to handle_wifi()
