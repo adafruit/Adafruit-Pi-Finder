@@ -1,3 +1,10 @@
+occidentalis (0.5.4) unstable; urgency=low
+
+  * Adds git dependency
+  * Suggests webIDE package
+
+ -- Todd Treece <todd@uniontownlabs.org>  Thu, 22 Jan 2015 23:16:43 +0000
+
 occidentalis (0.5.3) unstable; urgency=low
 
   * Adds occi 0.3.4 dependency (avahi restart).
