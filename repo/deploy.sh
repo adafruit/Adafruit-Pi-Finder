@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+NODE_DEB='node_0.10.35_armhf.deb'
+IDE_DEB='adafruitwebide-0.3.8-Linux.deb'
+
 # make sure user passed a path to the repo
 if [ "$1" == "" ]; then
   echo "You must specify a path to your pi_bootstrap repo. i.e. /home/admin/pi_bootstrap"
@@ -11,6 +14,20 @@ TEMP_DIR=`mktemp -d`
 cp -r $1/packages/* $TEMP_DIR
 cd $TEMP_DIR
 make
+
+# make the deb cache folder if it doesn't exist
+if [ ! -d /tmp/deb_cache ]; then
+  mkdir /tmp/deb_cache
+fi
+
+# cache the node deb
+if [ ! -f /tmp/deb_cache/$NODE_DEB ]; then
+  wget -P /tmp/deb_cache/ http://node-arm.herokuapp.com/$NODE_DEB
+fi
+# cache the webide deb
+if [ ! -f /tmp/deb_cache/$IDE_DEB ]; then
+  wget -P /tmp/deb_cache/ http://adafruit-download.s3.amazonaws.com/$IDE_DEB
+fi
 
 # sign packages, and add them to the repo
 dpkg-sig -k $GPG_KEY --sign builder $TEMP_DIR/build/*.deb
