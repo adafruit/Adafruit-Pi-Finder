@@ -29,7 +29,7 @@ See F</usr/share/doc/occi/occidentalis_example.txt> for a full example.
 
 =cut
 
-package OcciConfig v0.3.2;
+package OcciConfig v0.3.3;
 
 use warnings;
 use strict;
