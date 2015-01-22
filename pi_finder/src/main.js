@@ -20,10 +20,11 @@ app.on('ready', function() {
   });
 
   terminal = new BrowserWindow({
-    width: 600,
-    height: 400,
+    width: 640,
+    height: 384,
     resizable: false,
-    show: false
+    show: false,
+    'use-content-size': true
   });
 
   main.loadUrl('file://' + __dirname + '/ui/main.html');
@@ -53,6 +54,10 @@ app.on('ready', function() {
 
     var ssh = SSH(config),
         timer = working('Bootstrapping');
+
+    ipc.on('stdin', function(e, data) {
+      ssh.write(data);
+    });
 
     ssh.on('data', function(data) {
       terminal.webContents.send('stdout', data);
@@ -108,7 +113,7 @@ function working(message) {
 
     count++;
 
-  }, 200);
+  }, 500);
 
   return timer;
 
