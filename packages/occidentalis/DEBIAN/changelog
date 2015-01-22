@@ -1,15 +1,24 @@
+occidentalis (0.5.0) unstable; urgency=low
+
+  * Adds samba dependency
+  * Adds samba-common-bin dependency
+  * Adds samba config change script to postinst 
+
+ -- Todd Treece <todd@uniontownlabs.org>  Thu, 22 Jan 2015 00:42:50 +0000
+
 occidentalis (0.4.0) unstable; urgency=low
 
- * Adds i2c-tools dependency
- * Adds python-smbus dependency
- * Adds vim dependency
+  * Adds i2c-tools dependency
+  * Adds python-smbus dependency
+  * Adds vim dependency
 
  -- Brennen Bearnes <bbearnes@gmail.com>  Tue, 20 Jan 2015 15:28:00 -0700
 
 occidentalis (0.3.9) unstable; urgency=low
 
- * Adds occi run to postinst
- * Adds changelog
- * Adds avahi-daemon restart to postinst
+  * Adds occi run to postinst
+  * Adds changelog
+  * Adds avahi-daemon restart to postinst
 
  -- Todd Treece <todd@uniontownlabs.org>  Tue, 20 Jan 2015 14:19:00 -0500
+

@@ -1,3 +1,20 @@
 #!/bin/sh
 occi
 service avahi-daemon restart
+service netatalk restart
+cp /etc/samba/smb.conf /etc/samba/smb.conf.backup
+sed -i "s/.*workgroup[[:space:]]=.*/workgroup = WORKGROUP/" /etc/samba/smb.conf
+sed -i "s/.*wins[[:space:]]support[[:space:]]=.*/wins support = yes/" /etc/samba/smb.conf
+echo -ne "raspberry\n" | tee - | smbpasswd -a -s pi
+cat << "EOF" >> /etc/samba/smb.conf
+[pihome]
+   comment= Pi Home
+   path=/home/pi
+   browseable=Yes
+   writeable=Yes
+   only guest=no
+   create mask=0777
+   directory mask=0777
+   public=no
+EOF
+service samba restart
