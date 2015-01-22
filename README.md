@@ -9,11 +9,11 @@ We have created a utility that will find a Raspberry Pi connected to your
 local network and start the bootstrap process. The utility requires you to
 connect your Pi to your local network **via an ethernet cable**.
 
-Windows & Mac App:
+### Windows & Mac App:
 
 [Download the latest release][2] of the Pi Bootstrap utility.
 
-Linux (or Mac):
+### Linux (or Mac):
 
 ```sh
 $ curl -SLs https://apt.adafruit.com/bootstrap | bash
@@ -39,7 +39,7 @@ hostname=mypiname
 
 # basic wireless networking options:
 wifi_ssid=your network here
-wifi_password=your password / passphrase here
+wifi_password=your password or passphrase here
 ```
 
 Right now, these are the only configuration values supported.  Others will
