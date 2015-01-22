@@ -32,6 +32,10 @@ img {
   width: 100%;
 }
 
+#bootstrap {
+ background: #68ac3b;
+}
+
 #find {
   margin-top: 10px;
 }
