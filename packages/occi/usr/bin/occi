@@ -69,7 +69,9 @@ foreach my $key (sort keys %config) {
   foreach my $handler (@handlers) {
     my @log = &{$handler}(%config);
     foreach my $logline (@log) {
-      diag(1, 'run', $handler, $logline);
+      if (length($logline)) {
+        diag(1, 'run', $handler, $logline);
+      }
     }
   }
 }
@@ -106,7 +108,7 @@ sub handle_hostname {
 
   # What's the existing configuration?
   chomp(my $existing_etc_hostname = get_file('/etc/hostname'));
-  chomp(my $existing_hostname = occi_capture('hostname'));
+  chomp(my $existing_hostname = capture_string('hostname'));
 
   unless ($existing_etc_hostname eq $config{hostname}) {
     # Make sure this is set correctly at next boot
@@ -151,11 +153,11 @@ sub handle_wifi {
 
   my @log = 'Configuring ' . $config{wifi_ssid};
 
-  my ($ifconfig) = occi_capture('ifconfig', '-s');
+  my ($ifconfig) = capture_string('ifconfig', '-s');
   if ($ifconfig !~ /wlan/) {
     push @log, 'No wireless hardware found.';
   } elsif (defined $config{wifi_password}) {
-    my $wpa_config = occi_capture(
+    my $wpa_config = capture_string(
       'wpa_passphrase',
       $config{wifi_ssid},
       $config{'wifi_password'}
@@ -170,28 +172,35 @@ WPA
 
     push @log, "Writing $conf_file";
 
+    push @log, capture_list(
+      'wpa_cli',
+      'reconfigure'
+    );
+
     put_file($conf_file, $wpa_config, $conf_file . '.backup');
   } else {
     push @log, "No wifi_password defined, falling back to iwconfig.";
-    my $iwlog = occi_capture(
+    my $iwlog = capture_string(
       'iwconfig',
-      'wlan0', # TODO: this of course is not always going to be the same...
+      # TODO: this of course is not always going to be the same...
+      'wlan0',
       'essid',
       $config{wifi_ssid}
     );
+
   }
 
   return @log;
 }
 
-=item occi_capture($cmd, @args)
+=item capture_string($cmd, @args)
 
 Return a string containing the output of a command, or log an
 error.
 
 =cut
 
-sub occi_capture {
+sub capture_string {
   my ($cmd, @args) = @_;
 
   my $output;
@@ -205,6 +214,29 @@ sub occi_capture {
   }
 
   return $output;
+}
+
+=item capture_list($cmd, @args)
+
+Return a list containing the output of a command, or log an
+error.
+
+=cut
+
+sub capture_list {
+  my ($cmd, @args) = @_;
+
+  my @output;
+
+  eval {
+    @output = capturex($cmd, @args);
+  };
+
+  if ($@) {
+    diag(1, 'error', $@);
+  }
+
+  return @output;
 }
 
 =back
