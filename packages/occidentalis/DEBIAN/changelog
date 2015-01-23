@@ -1,3 +1,9 @@
+occidentalis (0.5.5) unstable; urgency=low
+
+  * bumps webide version suggestion 
+
+ -- Todd Treece <todd@uniontownlabs.org>  Fri, 23 Jan 2015 23:48:14 +0000
+
 occidentalis (0.5.4) unstable; urgency=low
 
   * Adds git dependency
