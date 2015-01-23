@@ -35,7 +35,9 @@ connect your Pi to your local network **via an ethernet cable** to start.
 Once the Pi is bootstrapped, it will be able to use ethernet or WiFi but we
 need to be able to connect to the Pi the first time around.
 
-### Windows & Mac App:
+### Windows, Mac, & Linux App:
+
+![finder GUI](/docs/rpi_bootstrap.png?raw=true)
 
 **Note for Mac users:** *If you are prevented from launching the app because of
 your security settings, you can right click on the app and click Open to bypass
