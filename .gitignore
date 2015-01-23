@@ -4,7 +4,7 @@
 node_modules
 pi_finder/build
 pi_finder/src/*.zip
-pi_finder/src/*.tar
+pi_finder/src/*.gz
 
 # debs we build on the fly
 packages/build/occi_*.deb
