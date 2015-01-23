@@ -29,7 +29,7 @@ desired hostname and wifi credentials, but it can also be created as
 `occidentalis.txt` on the card at any time.  When the Pi is running, edit
 `/boot/occidentalis.txt`.
 
-![screencast of opening occidentalis.txt in nano](https://raw.githubusercontent.com/adafruit/pi_bootstrap/master/docs/edit_occi_settings.gif)
+![screencast of opening occidentalis.txt in nano](/docs/edit_occi_settings.gif?raw=true)
 
 Here's an example file:
 
