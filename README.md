@@ -11,6 +11,8 @@ connect your Pi to your local network **via an ethernet cable**.
 
 ### Windows & Mac App:
 
+**Note for Mac users:** *If you are prevented from launching the app because of your security settings, you can right click on the app and click Open to bypass the warnings*
+
 [Download the latest release][2] of the Pi Bootstrap utility.
 
 ### Linux (or Mac):
