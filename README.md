@@ -6,18 +6,18 @@ So how can you find out the IP network address? PI FINDER TO THE RESCUE!
 Run this cross-platform application to locate your Raspberry Pi's IP
 address.
 
-But it doesn't end there! Order now and you'll also get the bootstrapping
+But it doesn't end there... Order now and you'll also get the bootstrapping
 functionality! That's right, the Pi Finder will ssh into the fresh new Pi 
 update it, set up the wifi SSID and password, a custom hostname you pick,
 and install a bunch of really handy software for you:
 
   * apt-get update (updates your existing Pi software to the latest versions)
-  * apt-get installs: avahi-daemon, netatalk - so you can connect to raspberrypi.local instead of needing to know the IP address in the future
-  * apt-get installs: node, tmux, vim, git - handy development tools! 
-  * apt-get installs: samba, samba-common-bin - file sharing so you can easily back up your Pi's file or transfer files to it
-  * apt-get installs: i2c-tools, python-smbus - tools for letting your connect to common i2c sensors
+  * apt-get installs: **avahi-daemon, netatalk** - so you can connect to raspberrypi.local instead of needing to know the IP address in the future
+  * apt-get installs: **node, tmux, vim, git** - handy development tools! 
+  * apt-get installs: **i2c-tools, python-smbus** - tools for letting your connect to common i2c sensors
+  * apt-get installs & configures: **samba, samba-common-bin** - file sharing so you can easily back up your Pi's file or transfer files to it
 
-and as a bonus, a handy tool we wrote called *occi* - which will let you change the hostname and wifi details by plugging the SD card into any computer and editing the /boot/occidentalis.txt file (see below)
+and as a bonus, a handy tool we wrote called **occi** - which will let you change the hostname and wifi details by plugging the SD card into any computer and editing the /boot/occidentalis.txt file (see below)
 
 
 
@@ -25,7 +25,9 @@ and as a bonus, a handy tool we wrote called *occi* - which will let you change 
 
 We have created a utility that will find a Raspberry Pi connected to your
 local network and start the bootstrap process. The utility requires you to
-connect your Pi to your local network **via an ethernet cable**.
+connect your Pi to your local network **via an ethernet cable** to start. 
+Once the Pi is bootstrapped, it will be able to use ethernet or WiFi but we
+need to be able to connect to the Pi the first time around.
 
 ### Windows & Mac App:
 
