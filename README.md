@@ -74,5 +74,4 @@ with:
 sudo occi
 ```
 
-[1]: https://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-2
-[2]: https://github.com/adafruit/pi_bootstrap/releases/latest
+[2]: https://github.com/adafruit/Adafruit-Pi-Finder/releases/latest
