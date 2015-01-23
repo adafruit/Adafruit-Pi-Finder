@@ -44,7 +44,7 @@ app.on('ready', function() {
 
     if(main) {
       e.preventDefault();
-      main.setSize(500, 500);
+      main.setSize(500, 530);
       terminal.hide();
       main.webContents.send('reset', false);
       terminal.webContents.send('disconnect', true);
@@ -112,7 +112,7 @@ app.on('ready', function() {
       }
 
       main.webContents.send('found', ip);
-      main.setSize(500, 500);
+      main.setSize(500, 530);
       main.focus();
       main.center();
 
