@@ -1,7 +1,25 @@
-# Raspberry Pi Bootstrap
+# Adafruit Raspberry Pi Finder
 
-The goal of this project is to make a version of [Occidentalis][1] that
-is distributed as a Debian package instead of an image.
+You have your brand new Raspberry Pi, and you are ready to get hacking... 
+Only problem is, you dont have an extra HDMI monitor and keyboard. 
+So how can you find out the IP network address? PI FINDER TO THE RESCUE! 
+Run this cross-platform application to locate your Raspberry Pi's IP
+address.
+
+But it doesn't end there! Order now and you'll also get the bootstrapping
+functionality! That's right, the Pi Finder will ssh into the fresh new Pi 
+update it, set up the wifi SSID and password, a custom hostname you pick,
+and install a bunch of really handy software for you:
+
+  * apt-get update (updates your existing Pi software to the latest versions)
+  * apt-get installs: avahi-daemon, netatalk - so you can connect to raspberrypi.local instead of needing to know the IP address in the future
+  * apt-get installs: node, tmux, vim, git - handy development tools! 
+  * apt-get installs: samba, samba-common-bin - file sharing so you can easily back up your Pi's file or transfer files to it
+  * apt-get installs: i2c-tools, python-smbus - tools for letting your connect to common i2c sensors
+
+and as a bonus, a handy tool we wrote called *occi* - which will let you change the hostname and wifi details by plugging the SD card into any computer and editing the /boot/occidentalis.txt file (see below)
+
+
 
 ## Finding the Pi & Starting the Bootstrap
 
