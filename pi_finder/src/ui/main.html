@@ -25,7 +25,7 @@
       <label>WiFi SSID:</label>
       <input name="wifi_ssid" placeholder="ssid">
       <label>WiFi Password</label>
-      <input name="wifi_password" placeholder="******">
+      <input name="wifi_password" pattern=".{8,63}" placeholder="******">
       <a id="bootstrap">Bootstrap!</a>
     </div>
 
@@ -48,6 +48,11 @@
         });
 
         $('#bootstrap').click(function() {
+
+          if(! $('input[name=wifi_password]')[0].checkValidity()) {
+            alert('WiFi Passphrase must be 8..63 characters');
+            return;
+          }
 
           $('#ssh, #options').addClass('hide');
 
