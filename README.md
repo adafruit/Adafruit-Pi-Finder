@@ -11,7 +11,7 @@ functionality! That's right, the Pi Finder will ssh into the fresh new Pi
 update it, set up the wifi SSID and password, a custom hostname you pick,
 and install a bunch of really handy software for you:
 
-  * apt-get update (updates your existing Pi software to the latest versions)
+  * apt-get update (grabs information on the newest versions of packages)
   * apt-get installs: **avahi-daemon, netatalk** - so you can connect to raspberrypi.local instead of needing to know the IP address in the future
   * apt-get installs: **node, tmux, vim, git** - handy development tools! 
   * apt-get installs: **i2c-tools, python-smbus** - tools for letting your connect to common i2c sensors
