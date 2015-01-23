@@ -37,7 +37,7 @@ need to be able to connect to the Pi the first time around.
 
 ### Windows, Mac, & Linux App:
 
-![finder GUI](/docs/rpi_bootstrap.png?raw=true)
+[![finder GUI](/docs/rpi_bootstrap.png?raw=true)][2]
 
 **Note for Mac users:** *If you are prevented from launching the app because of
 your security settings, you can right click on the app and click Open to bypass
@@ -45,7 +45,7 @@ the warnings*
 
 [Download the latest release][2] of the Pi Bootstrap utility.
 
-### Linux (or Mac):
+### Bootstrap via CLI on Linux or Mac:
 
 ```sh
 $ curl -SLs https://apt.adafruit.com/bootstrap | bash
