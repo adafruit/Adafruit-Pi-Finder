@@ -3,7 +3,7 @@ module.exports = function(grunt) {
     'build-atom-shell-app': {
       options: {
         build_dir: '../build',
-        platforms: ['darwin', 'win32'],
+        platforms: ['darwin', 'win32', 'linux32', 'linux64'],
         cache_dir: (process.env.TMPDIR || process.env.TEMP || '/tmp') + 'atom-shell-cache',
         app_dir: './'
       }
@@ -12,17 +12,23 @@ module.exports = function(grunt) {
       options: {
         force: true
       },
-      all: ['../build', '*.zip']
+      all: ['../build', '*.zip', '*.tar', '*.tar.gz']
     },
     rename: {
       mac: {
         files: [
-         { src: ['../build/darwin/atom-shell/Atom.app'], dest: '../build/darwin/atom-shell/Pi Bootstrap.app' }
+          { src: ['../build/darwin/atom-shell/Atom.app'], dest: '../build/darwin/atom-shell/Pi Bootstrap.app' }
+        ]
+      },
+      linux: {
+        files: [
+          { src: ['../build/linux32/atom-shell/atom'], dest: '../build/linux32/atom-shell/pibootstrap' },
+          { src: ['../build/linux64/atom-shell/atom'], dest: '../build/linux64/atom-shell/pibootstrap' }
         ]
       },
       win: {
         files: [
-         { src: ['../build/win32/atom-shell/atom.exe'], dest: '../build/win32/atom-shell/PiBootstrap.exe' }
+          { src: ['../build/win32/atom-shell/atom.exe'], dest: '../build/win32/atom-shell/PiBootstrap.exe' }
         ]
       }
     },
@@ -62,6 +68,17 @@ module.exports = function(grunt) {
         resourceFile: 'icons/adafruit.ico'
       }
     },
+    chmod: {
+      options: {
+        mode: '755'
+      },
+      linux: {
+        src: [
+          '../build/linux64/atom-shell/pibootstrap',
+          '../build/linux32/atom-shell/pibootstrap'
+        ]
+      }
+    },
     compress: {
       options: {
         force: true
@@ -83,6 +100,26 @@ module.exports = function(grunt) {
         cwd: '../build/win32/atom-shell/',
         src: ['**'],
         dest:'./'
+      },
+      linux32: {
+        options: {
+          archive: 'pibootstrap_linux32.tar.gz',
+          mode: 'tgz'
+        },
+        expand: true,
+        cwd: '../build/linux32/atom-shell/',
+        src: ['**'],
+        dest:'pibootstrap/'
+      },
+      linux64: {
+        options: {
+          archive: 'pibootstrap_linux64.tar.gz',
+          mode: 'tgz'
+        },
+        expand: true,
+        cwd: '../build/linux64/atom-shell/',
+        src: ['**'],
+        dest:'pibootstrap/'
       }
     }
 
@@ -95,8 +132,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-plistbuddy');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('winresourcer');
+  grunt.loadNpmTasks('grunt-chmod');
 
-  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'rename', 'copy', 'plistbuddy', 'winresourcer']);
+  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'rename', 'copy', 'chmod', 'plistbuddy', 'winresourcer']);
   grunt.registerTask('build', ['default', 'compress']);
 
 };
