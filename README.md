@@ -1,5 +1,8 @@
 # Adafruit Raspberry Pi Finder
 
+This set of utilities is intended to work with the [latest version of Raspbian][1],
+so please make sure you have installed Raspbian on your SD card before continuing.
+
 You have your brand new Raspberry Pi, and you are ready to get hacking... 
 Only problem is, you dont have an extra HDMI monitor and keyboard. 
 So how can you find out the IP network address? PI FINDER TO THE RESCUE! 
@@ -83,5 +86,5 @@ with:
 ```
 sudo occi
 ```
-
+[1]: http://www.raspberrypi.org/downloads/
 [2]: https://github.com/adafruit/Adafruit-Pi-Finder/releases/latest
