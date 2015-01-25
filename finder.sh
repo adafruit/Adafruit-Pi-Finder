@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-printf "This demo script will attempt to find a Pi on your local network, connect to it, and print the uptime.\n\n"
+printf "This script will attempt to find a Raspberry Pi on your local network, connect to it, and start the bootstrap.\n\n"
 
 # we haven't found the IP yet
 IP=""
