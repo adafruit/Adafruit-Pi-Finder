@@ -70,7 +70,7 @@ done
 
 # if the IP is still blank, we couldn't find a Pi
 if [[ "$IP" == "" ]]; then
-  printf "\nCouldn't find a Rasberry Pi on your local network. Please make sure it's plugged in via the Ethernet port.\n"
+  printf "\nCouldn't find a Raspberry Pi on your local network. Please make sure it's plugged in via the Ethernet port.\n"
   exit 1
 fi
 
