@@ -17,6 +17,7 @@
       <input name="username" value="pi">
       <label>SSH Password</label>
       <input name="password" value="raspberry">
+      <div id="align"></div>
       <div class="group"><a class="button" id="connect">Terminal</a> <a class="button" id="shutdown">Shutdown</a></div>
       <div class="clear"></div>
     </div>
@@ -28,6 +29,7 @@
       <input name="wifi_ssid" placeholder="ssid">
       <label>WiFi Password</label>
       <input name="wifi_password" pattern=".{8,63}" placeholder="******">
+      <label class="check"><input type="checkbox" name="webide" value="yes"> Install the WebIDE?</label>
       <a class="button" id="bootstrap">Bootstrap!</a>
     </div>
 
@@ -133,9 +135,7 @@
           timer = null;
         }
 
-        $('#status').html(data + '...');
-
-        //timer = working(data);
+        timer = working(data);
 
       });
 
@@ -154,7 +154,11 @@
 
         var options = {};
 
-        $('#options input').each(function() {
+        $('#options * input').each(function() {
+
+          if($(this).attr('type') == 'checkbox' && !$(this).is(':checked')) {
+            return;
+          }
 
           if($(this).val() === '') {
             return;

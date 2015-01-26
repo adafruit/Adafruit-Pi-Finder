@@ -28,7 +28,7 @@ img {
 }
 
 #connect, #shutdown {
-  margin-top: 20px;
+  margin-top: 10px;
   width: 48%;
   float: left;
 }
@@ -39,7 +39,7 @@ img {
 }
 
 #bootstrap {
-  margin: 20px auto 0 auto;
+  margin: 10px auto 0 auto;
   width: 100%;
   background: #68ac3b;
 }
@@ -65,9 +65,11 @@ img {
   width: 45%;
   float:left;
   padding: 0 10px;
-  margin-bottom: 20px;
 }
 
+#align {
+  height: 28px;
+}
 .clear {
  clear: both;
 }
@@ -94,6 +96,15 @@ input {
   box-sizing: border-box;
   display: block;
   width: 100%;
+}
+
+.check {
+  text-align: left;
+}
+
+.check input {
+  display: inline;
+  width: auto;
 }
 
 .group {
