@@ -11,13 +11,14 @@
 
     <div id="ssh" class="hide">
       <label>IP Address:</label>
-      <div class="input-group"><select id="host" name="host"></select> <input id="port" name="port" value="22"></div>
+      <div class="group"><select id="host" name="host"></select> <input id="port" name="port" value="22"></div>
       <div class="clear"></div>
       <label>SSH User:</label>
       <input name="username" value="pi">
       <label>SSH Password</label>
       <input name="password" value="raspberry">
-      <a id="connect">SSH Terminal</a>
+      <div class="group"><a class="button" id="connect">Terminal</a> <a class="button" id="shutdown">Shutdown</a></div>
+      <div class="clear"></div>
     </div>
 
     <div id="options" class="hide">
@@ -27,12 +28,12 @@
       <input name="wifi_ssid" placeholder="ssid">
       <label>WiFi Password</label>
       <input name="wifi_password" pattern=".{8,63}" placeholder="******">
-      <a id="bootstrap">Bootstrap!</a>
+      <a class="button" id="bootstrap">Bootstrap!</a>
     </div>
 
     <div class="clear"></div>
 
-    <a id="find">Find My Pi!</a>
+    <a class="button" id="find">Find My Pi!</a>
 
     <script>
 
@@ -60,7 +61,7 @@
           var options = get_ssh();
 
           options.pi_config = get_options();
-          options.bootstrap = true;
+          options.type = 'bootstrap';
 
           ipc.send('connect', options);
 
@@ -71,6 +72,16 @@
           $('#ssh, #options').addClass('hide');
 
           var options = get_ssh();
+
+          ipc.send('connect', options);
+
+        });
+
+        $('#shutdown').click(function() {
+
+          var options = get_ssh();
+
+          options.type = 'shutdown';
 
           ipc.send('connect', options);
 
@@ -122,7 +133,9 @@
           timer = null;
         }
 
-        timer = working(data);
+        $('#status').html(data + '...');
+
+        //timer = working(data);
 
       });
 
