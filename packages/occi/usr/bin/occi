@@ -254,7 +254,8 @@ sub handle_webide {
   my @log;
 
   if ($config{'webide'} eq 'yes') {
-
+    my ($action, @install_log) = install_package('adafruitwebide');
+    push @log, @install_log;
   } elsif ($config{'webide'} eq 'no') {
 
   } else {
@@ -408,6 +409,30 @@ sub is_installed_package {
   );
 
   return ($query_result =~ /install ok installed/);
+}
+
+=item install_package($package_name)
+
+Ensure that a given package is installed.  Should be idempotent.
+
+Returns a status string and, if action taken, an install log.
+
+=cut
+
+sub install_package {
+  my ($package_name) = @_;
+
+  return 'already-installed'
+    if is_installed_package($package_name);
+
+  my @install_log = capture_list(
+    'apt-get',
+    '-y',
+    'install',
+    $package_name
+  );
+
+  return ('installed', @install_log);
 }
 
 =item get_blurb()
