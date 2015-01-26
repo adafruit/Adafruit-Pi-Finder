@@ -34,17 +34,19 @@ package OcciConfig v0.3.5;
 
 use warnings;
 use strict;
+use 5.10.0;
+use feature "state";
 
 use IPC::System::Simple qw(capturex);
 
-diag(0, "Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}");
+diag("Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}");
 
 my $OCCI_CONFIG  = "/boot/occidentalis.txt";
 my %config       = parse_config($OCCI_CONFIG);
 
 have_config_or_die($OCCI_CONFIG);
 
-diag(1, 'file', $OCCI_CONFIG);
+diag('file', $OCCI_CONFIG);
 
 {
   # This bit of magic will find every sub starting with "handle_".
@@ -58,14 +60,13 @@ diag(1, 'file', $OCCI_CONFIG);
   no strict 'refs';
   my (@handlers) = grep { defined &{"OcciConfig\::$_"} && m/^handle_/ } keys %{"OcciConfig\::"};
 
+  diag_push('run');
   foreach my $handler (@handlers) {
-    my @log = &{$handler}(%config);
-    foreach my $logline (@log) {
-      if (length($logline)) {
-        diag(2, 'run', $handler, $logline);
-      }
-    }
+    diag_push($handler);
+    &{$handler}(%config);
+    diag_pop();
   }
+  diag_pop();
 }
 
 exit 0;
@@ -99,13 +100,13 @@ sub handle_selftest {
     webide
   );
 
-  my @log = ('Checking configuration for basic sanity.');
+  diag('Checking configuration for basic sanity.');
 
   foreach my $key (sort keys %config) {
     if ($allowed_keys{$key}) {
-      push @log, "valid :: $key :: $config{$key}";
+      diag('valid', $key, $config{$key});
     } else {
-      push @log, "error :: $key :: unrecognized configuration key";
+      diag('error', $key, 'unrecognized configuration key');
     }
   }
 
@@ -114,16 +115,14 @@ sub handle_selftest {
   my @check_packages = qw(occi occidentalis);
   foreach my $package (@check_packages) {
     if (is_installed_package($package)) {
-      push @log, "have package :: $package";
+      diag('have package', $package);
     } else {
-      push @log, "no package :: $package";
+      diag('no package', $package);
     }
   }
 
   chomp(my $dversion = get_file('/etc/debian_version'));
-  push @log, "debian version :: $dversion";
-
-  return @log;
+  diag('debian version', $dversion);
 }
 
 =item handle_hostname()
@@ -138,8 +137,6 @@ sub handle_hostname {
   return ('no hostname specified')
     unless defined $config{hostname};
 
-  my @log;
-
   my $hostname_changed = 0;
 
   # What's the existing configuration?
@@ -148,14 +145,14 @@ sub handle_hostname {
 
   unless ($existing_etc_hostname eq $config{hostname}) {
     # Make sure this is set correctly at next boot
-    push @log, 'Setting /etc/hostname to ' . $config{hostname};
+    diag('Setting /etc/hostname to ' . $config{hostname});
     put_file('/etc/hostname', $config{hostname});
     $hostname_changed = 1;
   }
 
   unless ($existing_hostname eq $config{hostname}) {
     # Make sure this is set correctly right _now_.
-    push @log, 'Setting current hostname to ' . $config{hostname};
+    diag('Setting current hostname to ' . $config{hostname});
     system('hostname', $config{hostname});
     $hostname_changed = 1;
   }
@@ -169,17 +166,18 @@ sub handle_hostname {
     $new_etc_hosts .= "\n$config_hostline";
   }
   if ($etc_hosts ne $new_etc_hosts) {
-    push @log, 'Adding ' . $config_hostline . ' to /etc/hosts';
+    diag('Adding ' . $config_hostline . ' to /etc/hosts');
     put_file('/etc/hosts', $new_etc_hosts);
     $hostname_changed = 1;
   }
 
   if ($hostname_changed && (-f '/etc/init.d/avahi-daemon')) {
-    push @log, 'restarting avahi-daemon';
-    push @log, capture_list('service', 'avahi-daemon', 'restart');
+    diag('restarting avahi-daemon');
+    my (@restart_log) = capture_list('service', 'avahi-daemon', 'restart');
+    foreach my $logline (@restart_log) {
+      diag($logline);
+    }
   }
-
-  return @log;
 }
 
 =item handle_wifi()
@@ -197,11 +195,11 @@ sub handle_wifi {
   return ('no wifi_ssid specified')
     unless defined $config{wifi_ssid};
 
-  my @log = 'Configuring network :: ' . $config{wifi_ssid};
+  diag('Configuring network :: ' . $config{wifi_ssid});
 
   my ($ifconfig) = capture_string('ifconfig', '-s');
   if ($ifconfig !~ /wlan/) {
-    push @log, 'No wireless hardware found.';
+    diag('No wireless hardware found.');
   } elsif (defined $config{wifi_password}) {
     my $wpa_config = capture_string(
       'wpa_passphrase',
@@ -216,16 +214,19 @@ update_config=1
 $wpa_config
 WPA
 
-    push @log, "Writing $conf_file";
+    diag("Writing $conf_file");
 
-    push @log, capture_list(
+    my @log = capture_list(
       'wpa_cli',
       'reconfigure'
     );
+    foreach my $logline (@log) {
+      diag($logline);
+    }
 
     put_file($conf_file, $wpa_config, $conf_file . '.backup');
   } else {
-    push @log, "No wifi_password defined, falling back to iwconfig.";
+    diag("No wifi_password defined, falling back to iwconfig.");
     my $iwlog = capture_string(
       'iwconfig',
       # TODO: this of course is not always going to be the same...
@@ -235,8 +236,6 @@ WPA
     );
 
   }
-
-  return @log;
 }
 
 =item handle_webide()
@@ -248,26 +247,28 @@ Handle installation (if needed) and activation/deactivation of the WebIDE.
 sub handle_webide {
   my %config = @_;
 
-  return ('No Adafruit WebIDE configuration found - use webide=yes to enable.')
-    unless defined $config{webide};
-
-  my @log;
-
-  if ($config{'webide'} eq 'yes') {
-    push @log, 'Making sure that Adafruit WebIDE is installed.';
-    push @log, 'Please be patient; this may take a while.';
-    my ($action, @install_log) = install_package('adafruitwebide');
-    push @log, $action;
-  } elsif ($config{'webide'} eq 'no') {
-    push @log, 'Making sure that Adafruit WebIDE is uninstalled.';
-    push @log, 'Please be patient; this may take a while.';
-    my ($action, @install_log) = uninstall_package('adafruitwebide');
-    push @log, $action;
-  } else {
-    push @log, "Got webide=$config{'webide'} - expected 'yes' or 'no'.";
+  unless (defined $config{webide}) {
+    diag('No Adafruit WebIDE configuration found - use webide=yes to enable.');
+    return;
   }
 
-  return @log;
+  if ($config{'webide'} eq 'yes') {
+    diag('Making sure that Adafruit WebIDE is installed.');
+    diag('Please be patient - this may take several minutes.');
+    diag_push('adafruitwebide');
+    my ($action, @install_log) = install_package('adafruitwebide');
+    diag($action);
+    diag_pop();
+  } elsif ($config{'webide'} eq 'no') {
+    diag('Making sure that Adafruit WebIDE is uninstalled.');
+    diag('Please be patient - this may take several minutes.');
+    diag_push('adafruitwebide');
+    my ($action, @install_log) = uninstall_package('adafruitwebide');
+    diag($action);
+    diag_pop();
+  } else {
+    diag("Got webide=$config{'webide'} - expected 'yes' or 'no'.");
+  }
 }
 
 =back
@@ -480,11 +481,25 @@ Print columns of diagnostic output.
 
 =cut
 
-sub diag {
-  my ($depth, @cols) = @_;
-  print "\t" x $depth;
-  print join " :: ", @cols;
-  print "\n";
+{
+  # Cheesy retention of state:
+  my @diag_stack = ();
+
+  sub diag {
+    my (@cols) = @_;
+    # print "\t" x $depth;
+    print join " :: ", (@diag_stack, @cols);
+    print "\n";
+  }
+
+  sub diag_push {
+    my ($value) = @_;
+    push @diag_stack, $value;
+  }
+
+  sub diag_pop {
+    pop @diag_stack;
+  }
 }
 
 =item have_config_or_die($path)
