@@ -1,8 +1,17 @@
-# In order to use this file, you can rename it to /boot/occidentalis.txt
+# In order to use this file, you can copy it to /boot/occidentalis.txt:
+#
+#     sudo cp occidentalis_example.txt /boot/occidentalis.txt
+#
 # and change the options on each line.
 #
 # Lines with a leading "#" are comments.  Blank lines are ignored.
 
+# set hostname
 hostname=somepi
+
+# configure a wireless network
 wifi_ssid=somewifinetwork
 wifi_password=somepassword
+
+# turn on / off the Adafruit WebIDE
+webide=yes

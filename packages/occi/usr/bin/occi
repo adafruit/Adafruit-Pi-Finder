@@ -18,7 +18,8 @@ F</boot/occidentalis.txt>.  The format is:
     wifi_ssid=Your Network Here
     wifi_password=your password here
 
-Blank lines and comments starting with C<#> will be ignored.
+Blank lines and comments starting with C<#> will be ignored.  Keys are
+case-insensitive.
 
 See F</usr/share/doc/occi/occidentalis_example.txt> for a full example.
 
@@ -40,19 +41,10 @@ diag(0, "Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}");
 
 my $OCCI_CONFIG  = "/boot/occidentalis.txt";
 my %config       = parse_config($OCCI_CONFIG);
-my %allowed_keys = map { $_ => 1} qw(hostname wifi_password wifi_ssid);
 
 have_config_or_die($OCCI_CONFIG);
 
 diag(1, 'file', $OCCI_CONFIG);
-my @errors;
-foreach my $key (sort keys %config) {
-  if ($allowed_keys{$key}) {
-    diag(2, 'valid', $key, $config{$key});
-  } else {
-    diag(2, 'error', $key, "unrecognized configuration key");
-  }
-}
 
 {
   # This bit of magic will find every sub starting with "handle_".
@@ -70,7 +62,7 @@ foreach my $key (sort keys %config) {
     my @log = &{$handler}(%config);
     foreach my $logline (@log) {
       if (length($logline)) {
-        diag(1, 'run', $handler, $logline);
+        diag(2, 'run', $handler, $logline);
       }
     }
   }
@@ -91,6 +83,48 @@ and returns a list containing one or more log items:
 It will automatically be called every time occi runs.
 
 =over
+
+=item handle_selftest()
+
+Run some basic sanity checks.
+
+=cut
+
+sub handle_selftest {
+  my %config = @_;
+
+  my %allowed_keys = map { $_ => 1} qw(
+    hostname
+    wifi_password wifi_ssid
+    webide
+  );
+
+  my @log = ('Checking configuration for basic sanity.');
+
+  foreach my $key (sort keys %config) {
+    if ($allowed_keys{$key}) {
+      push @log, "valid :: $key :: $config{$key}";
+    } else {
+      push @log, "error :: $key :: unrecognized configuration key";
+    }
+  }
+
+  # This is just a bit of a sanity check - do we know whether some
+  # things we might expect are installed?
+  my @check_packages = qw(occi occidentalis);
+  foreach my $package (@check_packages) {
+    if (is_installed_package($package)) {
+      push @log, "have package :: $package";
+    } else {
+      push @log, "no package :: $package";
+    }
+  }
+
+  chomp(my $dversion = get_file('/etc/debian_version'));
+  push @log, "debian version :: $dversion";
+
+  return @log;
+}
 
 =item handle_hostname()
 
@@ -150,6 +184,8 @@ sub handle_hostname {
 
 =item handle_wifi()
 
+Configure a wireless network.
+
 =cut
 
 sub handle_wifi {
@@ -161,7 +197,7 @@ sub handle_wifi {
   return ('no wifi_ssid specified')
     unless defined $config{wifi_ssid};
 
-  my @log = 'Configuring ' . $config{wifi_ssid};
+  my @log = 'Configuring network :: ' . $config{wifi_ssid};
 
   my ($ifconfig) = capture_string('ifconfig', '-s');
   if ($ifconfig !~ /wlan/) {
@@ -202,6 +238,37 @@ WPA
 
   return @log;
 }
+
+=item handle_webide()
+
+Handle installation (if needed) and activation/deactivation of the WebIDE.
+
+=cut
+
+sub handle_webide {
+  my %config = @_;
+
+  return ('No Adafruit WebIDE configuration found - use webide=yes to enable.')
+    unless defined $config{webide};
+
+  my @log;
+
+  if ($config{'webide'} eq 'yes') {
+
+  } elsif ($config{'webide'} eq 'no') {
+
+  } else {
+    push @log, "Got webide=$config{'webide'} - expected 'yes' or 'no'.";
+  }
+
+  return @log;
+}
+
+=back
+
+=head1 UTILITY SUBROUTINES
+
+=over
 
 =item capture_string($cmd, @args)
 
@@ -249,11 +316,6 @@ sub capture_list {
   return @output;
 }
 
-=back
-
-=head1 UTILITY SUBROUTINES
-
-=over
 
 =item parse_config($path_to_file)
 
@@ -274,7 +336,7 @@ sub parse_config {
   $config_str =~ s/\r\n/\n/g;
 
   while ($config_str =~ m{^([a-z_]+) = (.*?)$}ixmg) {
-    my $key = $1;
+    my $key = lc($1); # normalize to lowercase
     my $value = $2;
     $config{$key} = $value;
   }
@@ -327,6 +389,25 @@ sub put_file {
     or die "Failed opening $path: $!"; 
   print $fh $content;
   close $fh;
+}
+
+=item is_installed_package($package_name)
+
+Check whether a given package is installed.
+
+=cut
+
+sub is_installed_package {
+  my ($package_name) = @_;
+  my $query_result = capture_string(
+    'dpkg-query',
+    '-W',
+    '-f',
+    '${Status}',
+    $package_name
+  );
+
+  return ($query_result =~ /install ok installed/);
 }
 
 =item get_blurb()
