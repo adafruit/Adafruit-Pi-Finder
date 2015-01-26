@@ -111,16 +111,16 @@ input {
   width: 100%;
 }
 
-#host, #port {
+.host, .port {
   display: block;
 }
 
-#host {
+.host {
   width: 70%;
   float: left;
 }
 
-#port {
+.port {
   width: 22%;
   float: right;
 }
