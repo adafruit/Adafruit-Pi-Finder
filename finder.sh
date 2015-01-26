@@ -6,7 +6,7 @@ IP=""
 SSH_PORT=22
 
 NO_OP=0
-if [ $1 == "--debug" ]; then
+if [ "$1" == "--debug" ]; then
   NO_OP=1
   echo "Debugging - will just find Raspberry Pi and print uptime."
 else
