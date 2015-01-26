@@ -1,3 +1,9 @@
+occi (0.3.5) unstable; urgency=low
+
+ * Cleans up example occidentalis.txt in POD and man page
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Mon, 26 Jan 2015 08:24:00 -0700
+
 occi (0.3.4) unstable; urgency=low
 
  * Adds avahi-daemon restart to handle_hostname()

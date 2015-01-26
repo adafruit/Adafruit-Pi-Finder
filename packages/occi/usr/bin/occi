@@ -12,11 +12,11 @@ hostname and WiFi credentials to your Raspberry Pi.
 Settings are stored in a simple text file, usually
 F</boot/occidentalis.txt>.  The format is:
 
-    hostname=brennenpi
+    hostname=somepi
 
     # wifi configuration details:
-    wifi_ssid=Uniontown Labs
-    wifi_password=Code and Biko do not like cats.
+    wifi_ssid=Your Network Here
+    wifi_password=your password here
 
 Blank lines and comments starting with C<#> will be ignored.
 
@@ -29,7 +29,7 @@ See F</usr/share/doc/occi/occidentalis_example.txt> for a full example.
 
 =cut
 
-package OcciConfig v0.3.4;
+package OcciConfig v0.3.5;
 
 use warnings;
 use strict;
