@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
-printf "This script will attempt to find a Raspberry Pi on your local network, connect to it, and start the bootstrap.\n\n"
 
 # we haven't found the IP yet
 IP=""
+SSH_PORT=22
+
+NO_OP=0
+if [ "$1" == "--debug" ]; then
+  NO_OP=1
+  echo "Debugging - will just find Raspberry Pi and print uptime."
+else
+  printf "This script will attempt to find a Raspberry Pi on your local network, connect to it, and start the bootstrap.\n\n"
+fi
 
 # check if we are using the GNU version of the utils
 if date --version >/dev/null 2>&1; then
@@ -19,7 +27,7 @@ NORMAL=`tput sgr0`
 # get the router address
 if [ "$TYPE" == "BSD" ]; then
   ROUTER=$(netstat -r -f inet | grep ^default* | awk '{ print $2 }')
-else 
+else
   ROUTER=$(netstat -r --inet | grep ^default* | awk '{ print $2 }')
 fi
 
@@ -77,4 +85,27 @@ fi
 printf "\nAttempting to connect to the Raspberry Pi found @ $IP\n"
 printf "Please enter the default password of ${BOLD}raspberry${NORMAL} when prompted.\n"
 
-ssh -t pi@$IP 'curl -SLs https://apt.adafruit.com/install | sudo bash'
+# try to check if the ssh port is open on the target pi
+HAS_SSH=0
+if [ "$TYPE" == "BSD" ]; then
+  # the only downside to this seems to be that if the host is unreachable,
+  # this is going to hang - hopefully that's not an issue with an address
+  # we've just pinged
+  (echo > /dev/tcp/${IP}/${SSH_PORT}) >/dev/null 2>&1 && HAS_SSH=1
+else
+  # timeout is a recent-ish addition to GNU coreutils - this solution cribbed from:
+  # https://stackoverflow.com/questions/4922943/how-to-test-if-remote-tcp-port-is-opened-from-shell-script
+  timeout 1 bash -c "cat < /dev/null > /dev/tcp/${IP}/${SSH_PORT}" && HAS_SSH=1
+fi
+
+if [ $HAS_SSH -eq 0 ]; then
+  printf "\nThe system at ${IP} doesn't seem to be accepting connections on port ${SSH_PORT}."
+  printf "\nIs SSH enabled on the Raspberry Pi?\n"
+  exit 1
+fi
+
+if [ $NO_OP -eq 1 ]; then
+  ssh -t -p $SSH_PORT pi@$IP 'uptime'
+else
+  ssh -t pi@$IP 'curl -SLs https://apt.adafruit.com/install | sudo bash'
+fi
