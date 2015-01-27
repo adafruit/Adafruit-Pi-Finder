@@ -4,7 +4,7 @@ More info to come, this is just a brain dump in case I forget the requirements f
 
 * Install [xquartz](http://xquartz.macosforge.org/landing/).
 * Install [homebrew](http://brew.sh/).
-* Install the latest stable [node.js](http://nodejs.com)
+* Install the latest stable [node.js](http://nodejs.org)
 
 ```
 $ brew install wine winetricks

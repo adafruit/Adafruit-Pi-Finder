@@ -41,7 +41,7 @@ proto.username = 'pi';
 proto.password = 'raspberry';
 proto.host = '10.0.1.1';
 proto.port = 22;
-proto.bootstrap = false;
+proto.type = 'shell';
 proto.install_command = 'curl -SLs http://bootstrap.uniontownlabs.org/install | sudo bash';
 proto.pi_config = {};
 
@@ -79,15 +79,30 @@ proto.end = function() {
 
 proto.handleReady = function() {
 
-  if(this.bootstrap) {
-    return this.boot();
-  }
-
-  this.shell();
+  this[this.type].call(this);
 
 };
 
-proto.boot = function() {
+proto.shutdown = function() {
+
+  this.ssh.exec('sudo shutdown now', function(err, stream) {
+
+    if(err) {
+      return this.handleError(err);
+    }
+
+    this.stdin = stream;
+
+    stream.on('error', this.handleError.bind(this));
+    stream.on('data', this.handleData.bind(this));
+    stream.on('close', this.handleClose.bind(this));
+    stream.stderr.on('data', this.handleError.bind(this));
+
+  }.bind(this));
+
+};
+
+proto.bootstrap = function() {
 
   var opts = {
     pty: {

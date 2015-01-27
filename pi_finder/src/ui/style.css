@@ -11,7 +11,7 @@ img {
   margin: 30px auto;
 }
 
-#find, #bootstrap, #connect {
+.button {
   text-align: center;
   box-sizing: border-box;
   display: block;
@@ -27,13 +27,21 @@ img {
   cursor: pointer;
 }
 
-#bootstrap, #connect {
-  margin: 20px auto 0 auto;
-  width: 100%;
+#connect, #shutdown {
+  margin-top: 10px;
+  width: 48%;
+  float: left;
+}
+
+#shutdown {
+  float: right;
+  background: #d9534f;
 }
 
 #bootstrap {
- background: #68ac3b;
+  margin: 10px auto 0 auto;
+  width: 100%;
+  background: #68ac3b;
 }
 
 #find {
@@ -57,9 +65,11 @@ img {
   width: 45%;
   float:left;
   padding: 0 10px;
-  margin-bottom: 20px;
 }
 
+#align {
+  height: 28px;
+}
 .clear {
  clear: both;
 }
@@ -82,7 +92,35 @@ label {
   margin-top: 10px;
 }
 
-input, select {
+input {
+  box-sizing: border-box;
   display: block;
   width: 100%;
+}
+
+.check {
+  text-align: left;
+}
+
+.check input {
+  display: inline;
+  width: auto;
+}
+
+.group {
+  width: 100%;
+}
+
+.host, .port {
+  display: block;
+}
+
+.host {
+  width: 70%;
+  float: left;
+}
+
+.port {
+  width: 22%;
+  float: right;
 }

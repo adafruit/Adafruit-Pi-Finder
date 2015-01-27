@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Raspberry Pi Bootstrap</title>
+    <title>Raspberry Pi Finder</title>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
@@ -10,13 +10,16 @@
     <div id="status"></div>
 
     <div id="ssh" class="hide">
-      <label>IP Address:</label>
-      <select name="host"></select>
+      <div class="group"><label class="host">IP Address:</label> <label class="port">Port:</label></div>
+      <div class="group"><select class="host" name="host"></select> <input class="port" name="port" value="22"></div>
+      <div class="clear"></div>
       <label>SSH User:</label>
       <input name="username" value="pi">
       <label>SSH Password</label>
       <input name="password" value="raspberry">
-      <a id="connect">SSH Terminal</a>
+      <div id="align"></div>
+      <div class="group"><a class="button" id="connect">Terminal</a> <a class="button" id="shutdown">Shutdown</a></div>
+      <div class="clear"></div>
     </div>
 
     <div id="options" class="hide">
@@ -26,12 +29,13 @@
       <input name="wifi_ssid" placeholder="ssid">
       <label>WiFi Password</label>
       <input name="wifi_password" pattern=".{8,63}" placeholder="******">
-      <a id="bootstrap">Bootstrap!</a>
+      <label class="check"><input type="checkbox" name="webide" value="yes"> Install the WebIDE?</label>
+      <a class="button" id="bootstrap">Bootstrap!</a>
     </div>
 
     <div class="clear"></div>
 
-    <a id="find">Find My Pi!</a>
+    <a class="button" id="find">Find My Pi!</a>
 
     <script>
 
@@ -59,7 +63,7 @@
           var options = get_ssh();
 
           options.pi_config = get_options();
-          options.bootstrap = true;
+          options.type = 'bootstrap';
 
           ipc.send('connect', options);
 
@@ -70,6 +74,16 @@
           $('#ssh, #options').addClass('hide');
 
           var options = get_ssh();
+
+          ipc.send('connect', options);
+
+        });
+
+        $('#shutdown').click(function() {
+
+          var options = get_ssh();
+
+          options.type = 'shutdown';
 
           ipc.send('connect', options);
 
@@ -140,7 +154,11 @@
 
         var options = {};
 
-        $('#options input').each(function() {
+        $('#options * input').each(function() {
+
+          if($(this).attr('type') == 'checkbox' && !$(this).is(':checked')) {
+            return;
+          }
 
           if($(this).val() === '') {
             return;

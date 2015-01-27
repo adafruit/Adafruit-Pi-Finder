@@ -12,7 +12,8 @@ module.exports = function(grunt) {
       options: {
         force: true
       },
-      all: ['../build', '*.zip', '*.tar', '*.tar.gz']
+      all: ['../build', '*.zip', '*.tar', '*.tar.gz'],
+      symlink: ['../build/darwin/atom-shell/Atom.app/Contents/Resources/app']
     },
     rename: {
       mac: {
@@ -79,6 +80,15 @@ module.exports = function(grunt) {
         ]
       }
     },
+    symlink: {
+      options: {
+        overwrite: false
+      },
+      dev: {
+        src: './',
+        dest: '../build/darwin/atom-shell/Atom.app/Contents/Resources/app'
+      }
+    },
     compress: {
       options: {
         force: true
@@ -133,8 +143,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('winresourcer');
   grunt.loadNpmTasks('grunt-chmod');
+  grunt.loadNpmTasks('grunt-contrib-symlink');
 
-  grunt.registerTask('default', ['clean', 'build-atom-shell-app', 'rename', 'copy', 'chmod', 'plistbuddy', 'winresourcer']);
-  grunt.registerTask('build', ['default', 'compress']);
+  grunt.registerTask('default', ['clean:all', 'build-atom-shell-app', 'clean:symlink', 'symlink']);
+  grunt.registerTask('build', ['clean:all', 'build-atom-shell-app', 'rename', 'copy', 'chmod', 'plistbuddy', 'winresourcer', 'compress']);
 
 };

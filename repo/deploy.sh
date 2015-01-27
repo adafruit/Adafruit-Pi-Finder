@@ -9,6 +9,24 @@ if [ "$1" == "" ]; then
   exit 1
 fi
 
+# confirm we are working with the right folder
+if [ ! -f $1/finder.sh ]; then
+  echo "Are you sure ${1} is the correct path to the repo? finder.sh check failed."
+  exit 1
+fi
+
+# deploy latest finder shell script
+cd /var/packages/boostrap
+rm index.txt
+cp $1/finder.sh index.txt
+chmod 644 index.txt
+
+# deploy latest install shell script
+cd /var/packages/install
+rm index.txt
+cp $1/install.sh index.txt
+chmod 644 index.txt
+
 # copy the packages to a temp folder, build them:
 TEMP_DIR=`mktemp -d`
 cp -r $1/packages/* $TEMP_DIR

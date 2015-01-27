@@ -53,7 +53,16 @@ apt-get update
 # stop asking me questions
 export DEBIAN_FRONTEND=noninteractive
 
-# install
-apt-get -y install occidentalis
+uptodate=$(apt-show-versions occidentalis | grep uptodate)
+
+if [ "$uptodate" = "" ]; then
+  # install
+  echo "**** Installing the latest version of occidentalis ****"
+  apt-get -y install occidentalis
+else
+  # up to date, but rerun postinst
+  echo "**** Occidentalis is up to date. Reloading configuration ****"
+  dpkg-reconfigure -f noninteractive occidentalis
+fi
 
 echo "BOOTSTRAP COMPLETE!!!"
