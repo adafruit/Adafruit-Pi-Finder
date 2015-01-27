@@ -16,7 +16,7 @@ if [ ! -f $1/finder.sh ]; then
 fi
 
 # deploy latest finder shell script
-cd /var/packages/boostrap
+cd /var/packages/bootstrap
 rm index.txt
 cp $1/finder.sh index.txt
 chmod 644 index.txt
