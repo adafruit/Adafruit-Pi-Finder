@@ -1,3 +1,9 @@
+occidentalis (0.5.6) unstable; urgency=low
+
+  * bumps occi version dependency for WebIDE handling
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Tue, 27 Jan 2015 09:36:00 -0700
+
 occidentalis (0.5.5) unstable; urgency=low
 
   * bumps webide version suggestion 

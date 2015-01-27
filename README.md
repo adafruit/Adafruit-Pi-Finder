@@ -83,8 +83,9 @@ be added in time.
 By default, `occi` will run whenever the Pi boots, but can also be run manually
 with:
 
-```
+```sh
 sudo occi
 ```
+
 [1]: http://www.raspberrypi.org/downloads/
 [2]: https://github.com/adafruit/Adafruit-Pi-Finder/releases/latest

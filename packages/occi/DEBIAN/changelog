@@ -1,3 +1,10 @@
+occi (0.4.0) unstable; urgency=low
+
+ * Adds handling of Adafruit WebIDE installs based on webide=yes
+ * Refactors some configuration testing and debug output
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Mon, 26 Jan 2015 08:24:00 -0700
+
 occi (0.3.5) unstable; urgency=low
 
  * Cleans up example occidentalis.txt in POD and man page

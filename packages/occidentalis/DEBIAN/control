@@ -1,9 +1,9 @@
 Package: occidentalis
-Version: 0.5.5
+Version: 0.5.6
 Section: base
 Priority: optional
 Architecture: armhf
-Depends: avahi-daemon (>= 0.6.31), netatalk (>= 2.2.2), node (>= 0.10.35), occi (>= 0.3.4), tmux (>= 1.6-2), i2c-tools, python-smbus, vim, git, samba, samba-common-bin
+Depends: avahi-daemon (>= 0.6.31), netatalk (>= 2.2.2), node (>= 0.10.35), occi (>= 0.4.0), tmux (>= 1.6-2), i2c-tools, python-smbus, vim, git, samba, samba-common-bin
 Suggests: adafruitwebide (>= 0.3.9)
 Maintainer: Todd Treece <todd@uniontownlabs.org>
 Description: Occidentalis
