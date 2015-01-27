@@ -12,3 +12,5 @@ packages/build/occidentalis_*.deb
 
 # generated man pages - see packages/Makefile
 packages/occi/usr/share/man/man1/*.gz
+packages/occidentalis/usr/share/doc/occidentalis/changelog.gz
+packages/occi/usr/share/doc/occi/changelog.gz
