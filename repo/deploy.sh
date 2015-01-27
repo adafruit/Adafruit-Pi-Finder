@@ -9,6 +9,12 @@ if [ "$1" == "" ]; then
   exit 1
 fi
 
+# confirm we are working with the right folder
+if [ ! -f $1/finder.sh ]; then
+  echo "Are you sure ${1} is the correct path to the repo? finder.sh check failed."
+  exit 1
+fi
+
 # deploy latest finder shell script
 cd /var/packages/boostrap
 rm index.txt
