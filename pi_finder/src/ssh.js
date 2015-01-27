@@ -160,7 +160,13 @@ proto.shell = function() {
 
 proto.buildCommand = function() {
 
-  var command = options = '';
+  var command = options = '',
+      webide = false;
+
+  if(this.pi_config.hasOwnProperty('webide')) {
+    webide = true;
+    delete this.pi_config.webide;
+  }
 
   // loop through options and build new occidentalis.txt
   for(var key in this.pi_config) {
@@ -181,6 +187,10 @@ proto.buildCommand = function() {
   }
 
   command += this.install_command;
+
+  if(webide) {
+    command += ' && sudo apt-get -y install adafruitwebide';
+  }
 
   return command;
 
