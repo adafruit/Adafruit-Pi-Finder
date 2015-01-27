@@ -1,6 +1,7 @@
 occidentalis (0.5.7) unstable; urgency=low
 
   * bumps suggested webide version 
+  * bumps occi version dependency to remove WebIDE handling
 
  -- Todd Treece <todd@uniontownlabs.org>  Tue, 27 Jan 2015 18:45:48 +0000
 

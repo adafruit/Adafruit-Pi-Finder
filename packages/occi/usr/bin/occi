@@ -30,7 +30,7 @@ See F</usr/share/doc/occi/occidentalis_example.txt> for a full example.
 
 =cut
 
-package OcciConfig v0.4.0;
+package OcciConfig v0.5.0;
 
 use warnings;
 use strict;
@@ -97,7 +97,6 @@ sub handle_selftest {
   my %allowed_keys = map { $_ => 1} qw(
     hostname
     wifi_password wifi_ssid
-    webide
   );
 
   diag('Checking configuration for basic sanity.');
@@ -238,38 +237,6 @@ WPA
   }
 }
 
-=item handle_webide()
-
-Handle installation (if needed) and activation/deactivation of the WebIDE.
-
-=cut
-
-sub handle_webide {
-  my %config = @_;
-
-  unless (defined $config{webide}) {
-    diag('No Adafruit WebIDE configuration found - use webide=yes to enable.');
-    return;
-  }
-
-  if ($config{'webide'} eq 'yes') {
-    diag('Making sure that Adafruit WebIDE is installed.');
-    diag('Please be patient - this may take several minutes.');
-    diag_push('adafruitwebide');
-    my ($action, @install_log) = install_package('adafruitwebide');
-    diag($action);
-    diag_pop();
-  } elsif ($config{'webide'} eq 'no') {
-    diag('Making sure that Adafruit WebIDE is uninstalled.');
-    diag('Please be patient - this may take several minutes.');
-    diag_push('adafruitwebide');
-    my ($action, @install_log) = uninstall_package('adafruitwebide');
-    diag($action);
-    diag_pop();
-  } else {
-    diag("Got webide=$config{'webide'} - expected 'yes' or 'no'.");
-  }
-}
 
 =back
 

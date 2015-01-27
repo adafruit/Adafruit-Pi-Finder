@@ -1,3 +1,10 @@
+occi (0.5.0) unstable; urgency=low
+
+ * Removes handling of Adafruit WebIDE installs
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Tue, 27 Jan 2015 14:07:00 -0700
+
+
 occi (0.4.0) unstable; urgency=low
 
  * Adds handling of Adafruit WebIDE installs based on webide=yes

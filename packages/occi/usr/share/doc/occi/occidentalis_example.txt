@@ -12,6 +12,3 @@ hostname=somepi
 # configure a wireless network
 wifi_ssid=somewifinetwork
 wifi_password=somepassword
-
-# turn on / off the Adafruit WebIDE
-webide=yes
