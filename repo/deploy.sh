@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-NODE_DEB='node_0.10.35_armhf.deb'
+NODE_DEB='node_0.10.36_armhf.deb'
 IDE_DEB='adafruitwebide-0.3.10-Linux.deb'
 
 # make sure user passed a path to the repo
