@@ -35,21 +35,21 @@ cd $TEMP_DIR
 make
 
 # make the deb cache folder if it doesn't exist
-if [ ! -d /tmp/deb_cache ]; then
-  mkdir /tmp/deb_cache
+if [ ! -d ~/deb_cache ]; then
+  mkdir ~/deb_cache
 fi
 
 # cache the node deb
-if [ ! -f /tmp/deb_cache/$NODE_DEB ]; then
-  wget http://node-arm.herokuapp.com/node_latest_armhf.deb -O /tmp/deb_cache/$NODE_DEB
+if [ ! -f ~/deb_cache/$NODE_DEB ]; then
+  wget http://node-arm.herokuapp.com/node_latest_armhf.deb -O ~/deb_cache/$NODE_DEB
 fi
 # cache the webide deb
-if [ ! -f /tmp/deb_cache/$IDE_DEB ]; then
-  wget -P /tmp/deb_cache/ http://adafruit-download.s3.amazonaws.com/$IDE_DEB
+if [ ! -f ~/deb_cache/$IDE_DEB ]; then
+  wget -P ~/deb_cache/ http://adafruit-download.s3.amazonaws.com/$IDE_DEB
 fi
 
 # copy all of the cached debs into the build dir
-cp /tmp/deb_cache/*.deb $TEMP_DIR/build
+cp ~/deb_cache/*.deb $TEMP_DIR/build
 
 # sign packages, and add them to the repo
 dpkg-sig -k $GPG_KEY --sign builder $TEMP_DIR/build/*.deb
