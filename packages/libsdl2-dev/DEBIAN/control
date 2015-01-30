@@ -1,0 +1,18 @@
+Package: libsdl2-dev
+Source: libsdl2
+Version: 2.0.3
+Architecture: armhf
+Maintainer: Debian SDL packages maintainers <pkg-sdl-maintainers@lists.alioth.debian.org>
+Installed-Size: 3549
+Depends: libsdl2 (= 2.0.3), libc6-dev, libgl1-mesa-dev
+Conflicts: libsdl-1.3-dev
+Replaces: libsdl-1.3-dev
+Section: libdevel
+Priority: optional
+Multi-Arch: same
+Homepage: http://www.libsdl.org/
+Description: Simple DirectMedia Layer development files
+ SDL is a library that allows programs portable low level access to a video
+ framebuffer, audio output, mouse, and keyboard.
+ .
+ This package contains files needed if you wish to use the SDL library in your own programs.
