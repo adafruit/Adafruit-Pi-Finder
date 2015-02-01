@@ -115,7 +115,8 @@ proto.upload = function() {
 
     var progress = function(uploaded, chunk, total) {
       var percent = ((uploaded / total) * 100).toFixed(2);
-      this.handleData(percent + '% complete');
+      this.handleData('\x1bc');
+      this.handleData(percent + '% complete\n');
     }.bind(this);
 
     sftp.fastPut(this.file_upload, dest, { step: progress }, function(err) {
