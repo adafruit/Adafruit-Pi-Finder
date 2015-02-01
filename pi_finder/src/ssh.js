@@ -1,5 +1,6 @@
 var SSH = require('ssh2'),
     events = require('events'),
+    path = require('path'),
     util = require('util');
 
 /**** ssh is an event emitter ****/
@@ -54,7 +55,7 @@ proto.handleData = function(data) {
 };
 
 proto.handleClose = function() {
-  this.emit('done', 'done');
+  this.emit('done');
 };
 
 proto.write = function(data) {
@@ -97,6 +98,35 @@ proto.shutdown = function() {
     stream.on('data', this.handleData.bind(this));
     stream.on('close', this.handleClose.bind(this));
     stream.stderr.on('data', this.handleError.bind(this));
+
+  }.bind(this));
+
+};
+
+proto.upload = function() {
+
+  this.ssh.sftp(function(err, sftp) {
+
+    if(err) {
+      return this.handleError(err);
+    }
+
+    var dest = '/home/' + this.username + '/' + path.basename(this.file_upload);
+
+    var progress = function(uploaded, chunk, total) {
+      var percent = ((uploaded / total) * 100).toFixed(2);
+      this.handleData(percent + '% complete');
+    }.bind(this);
+
+    sftp.fastPut(this.file_upload, dest, { step: progress }, function(err) {
+
+      if(err) {
+        return this.handleError(err);
+      }
+
+      this.emit('uploaded');
+
+    }.bind(this));
 
   }.bind(this));
 
