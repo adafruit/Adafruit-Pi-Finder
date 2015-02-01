@@ -27,14 +27,19 @@ img {
   cursor: pointer;
 }
 
-#connect, #shutdown {
+#connect, #upload {
   margin-top: 10px;
   width: 48%;
   float: left;
 }
 
-#shutdown {
+#upload {
   float: right;
+}
+
+#shutdown {
+  margin: 10px auto 0 auto;
+  width: 100%;
   background: #d9534f;
 }
 
@@ -105,6 +110,7 @@ input {
 .check input {
   display: inline;
   width: auto;
+  margin-bottom: 14px;
 }
 
 .group {

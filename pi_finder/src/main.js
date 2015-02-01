@@ -1,5 +1,6 @@
 var app = require('app'),
     ipc = require('ipc'),
+    dialog = require('dialog'),
     SSH = require('./ssh.js'),
     BrowserWindow = require('browser-window'),
     Finder = require('./finder.js'),
@@ -14,7 +15,7 @@ app.on('ready', function() {
 
   main = new BrowserWindow({
     width: 300,
-    height: 360,
+    height: 380,
     resizable: false,
     'use-content-size': true
   });
@@ -44,7 +45,7 @@ app.on('ready', function() {
 
     if(main) {
       e.preventDefault();
-      main.setSize(500, 530);
+      main.setSize(500, 550);
       terminal.hide();
       main.webContents.send('reset', false);
       terminal.webContents.send('disconnect', true);
@@ -54,48 +55,30 @@ app.on('ready', function() {
 
   ipc.on('connect', function(e, config) {
 
+    if(config.type == 'upload') {
+
+      var options = {
+        title: 'Select a file to upload',
+        properties: [ 'openFile' ]
+      };
+
+      config.file_upload = dialog.showOpenDialog(options);
+
+      if(! config.file_upload) {
+        return main.webContents.send('status', 'Upload failed.');
+      }
+
+      config.file_upload = config.file_upload.toString();
+
+    }
+
     terminal.show();
     terminal.focus();
-    main.setSize(300, 360);
+    main.setSize(300, 380);
 
     main.webContents.send('working', 'Connecting');
 
-    var ssh = SSH(config);
-
-    ipc.on('stdin', function(e, data) {
-      if(ssh) {
-        ssh.write(data);
-      }
-    });
-
-    ipc.on('disconnect', function() {
-      if(ssh) {
-        ssh.end();
-      }
-    });
-
-    ssh.once('data', function() {
-      main.webContents.send('status', 'Connected.');
-    });
-
-    ssh.on('data', function(data) {
-      terminal.webContents.send('stdout', data);
-    });
-
-    ssh.on('error', function(err) {
-      terminal.webContents.send('stderr', err);
-    });
-
-    ssh.on('done', function() {
-
-      ssh = null;
-
-      if(terminal.isVisible()) {
-        terminal.close();
-        main.focus();
-      }
-
-    });
+    ssh_connect(config);
 
   });
 
@@ -112,7 +95,7 @@ app.on('ready', function() {
       }
 
       main.webContents.send('found', ip);
-      main.setSize(500, 530);
+      main.setSize(500, 550);
       main.focus();
       main.center();
 
@@ -121,3 +104,58 @@ app.on('ready', function() {
   });
 
 });
+
+function ssh_connect(config) {
+
+  var ssh = SSH(config);
+
+  ipc.on('stdin', function(e, data) {
+    if(ssh) {
+      ssh.write(data);
+    }
+  });
+
+  ipc.on('disconnect', function() {
+    if(ssh) {
+      ssh.end();
+    }
+  });
+
+  ssh.once('data', function() {
+    main.webContents.send('status', 'Connected.');
+  });
+
+  ssh.on('data', function(data) {
+    terminal.webContents.send('stdout', data);
+  });
+
+  ssh.on('error', function(err) {
+    terminal.webContents.send('stderr', err);
+  });
+
+  ssh.on('uploaded', function() {
+
+    if(ssh) {
+      ssh.end();
+    }
+
+    if(terminal.isVisible()) {
+      terminal.close();
+      main.focus();
+      main.webContents.send('status', 'Upload Complete.');
+    }
+
+  });
+
+  ssh.on('done', function() {
+
+    ssh = null;
+
+    if(terminal.isVisible()) {
+      terminal.close();
+      main.focus();
+    }
+
+  });
+
+}
