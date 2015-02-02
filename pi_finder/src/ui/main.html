@@ -17,9 +17,9 @@
       <input name="username" value="pi">
       <label>SSH Password</label>
       <input name="password" value="raspberry">
-      <div id="align"></div>
-      <div class="group"><a class="button" id="connect">Terminal</a> <a class="button" id="shutdown">Shutdown</a></div>
+      <div class="group"><a class="button" id="connect">Terminal</a> <a class="button" id="upload">Upload</a></div>
       <div class="clear"></div>
+      <a class="button" id="shutdown">Shutdown</a>
     </div>
 
     <div id="options" class="hide">
@@ -74,6 +74,17 @@
           $('#ssh, #options').addClass('hide');
 
           var options = get_ssh();
+
+          ipc.send('connect', options);
+
+        });
+
+        $('#upload').click(function() {
+
+          $('#ssh, #options').addClass('hide');
+
+          var options = get_ssh();
+          options.type = 'upload';
 
           ipc.send('connect', options);
 
