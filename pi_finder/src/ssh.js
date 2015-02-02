@@ -87,7 +87,7 @@ proto.handleReady = function() {
 
 proto.shutdown = function() {
 
-  this.ssh.exec('sudo shutdown now', function(err, stream) {
+  this.ssh.exec('sudo shutdown -h now', function(err, stream) {
 
     if(err) {
       return this.handleError(err);
