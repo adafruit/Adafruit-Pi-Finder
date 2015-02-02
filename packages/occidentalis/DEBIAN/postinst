@@ -34,3 +34,10 @@ if ! grep -Fq "pihome" /etc/samba/smb.conf; then
 EOF
   service samba restart
 fi
+
+# Migrate from apt.uniontownlabs.org to apt.adafruit.com
+if grep -q 'apt.uniontownlabs.org' /etc/apt/sources.list; then
+  echo "Migrating to apt.adafruit.com from apt.uniontownlabs.org"
+  sed -i 's/apt.uniontownlabs.org/apt.adafruit.com/g' /etc/apt/sources.list
+  wget -O - -q https://apt.adafruit.com/apt.adafruit.com.gpg.key | apt-key add -
+fi
