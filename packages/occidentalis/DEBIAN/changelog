@@ -1,3 +1,10 @@
+occidentalis (0.6.0) unstable; urgency=low
+
+  * migrates apt repository to apt.adafruit.com
+  * bumps occi version dependency to add flags
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Mon, 02 Feb 2015 14:09:23 -0700
+
 occidentalis (0.5.7) unstable; urgency=low
 
   * bumps suggested webide version 

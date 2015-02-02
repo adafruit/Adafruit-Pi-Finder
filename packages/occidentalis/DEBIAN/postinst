@@ -34,3 +34,14 @@ if ! grep -Fq "pihome" /etc/samba/smb.conf; then
 EOF
   service samba restart
 fi
+
+# Migrate from apt.uniontownlabs.org to apt.adafruit.com
+if grep -q 'apt.uniontownlabs.org' /etc/apt/sources.list; then
+  echo "Migrating to apt.adafruit.com from apt.uniontownlabs.org"
+  sed -i '/apt.uniontownlabs.org/d' /etc/apt/sources.list
+
+  if ! grep -q 'apt.adafruit.com' /etc/apt/sources.list; then
+    echo "deb http://apt.adafruit.com/raspbian/ wheezy main" >> /etc/apt/sources.list
+  fi
+  wget -O - -q https://apt.adafruit.com/apt.adafruit.com.gpg.key | apt-key add -
+fi
