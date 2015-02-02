@@ -28,22 +28,37 @@ See F</usr/share/doc/occi/occidentalis_example.txt> for a full example.
     # apply configuration in /boot/occidentalis.txt
     sudo occi
 
+    # check current version
+    occi --version
+
+    # apply a different configuration file
+    sudo occi --file=/home/alternate_occidentalis.txt
+
 =cut
 
-package OcciConfig v0.5.0;
+package OcciConfig v0.5.1;
 
 use warnings;
 use strict;
 use 5.10.0;
-use feature "state";
 
+use Getopt::Long;
 use IPC::System::Simple qw(capturex);
 
-diag("Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}");
-
+# Handle CLI options:
 my $OCCI_CONFIG  = "/boot/occidentalis.txt";
-my %config       = parse_config($OCCI_CONFIG);
+my $show_version_and_exit = 0;
+GetOptions(
+  "file=s"  => \$OCCI_CONFIG,
+  "version" => \$show_version_and_exit
+) or die("Error in command line arguments\n");
 
+diag("Adafruit Occidentalis configuration helper, ${OcciConfig::VERSION}");
+if ($show_version_and_exit) {
+  exit 0;
+}
+
+my %config = parse_config($OCCI_CONFIG);
 have_config_or_die($OCCI_CONFIG);
 
 diag('file', $OCCI_CONFIG);
