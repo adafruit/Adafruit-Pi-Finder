@@ -38,6 +38,7 @@ fi
 # Migrate from apt.uniontownlabs.org to apt.adafruit.com
 if grep -q 'apt.uniontownlabs.org' /etc/apt/sources.list; then
   echo "Migrating to apt.adafruit.com from apt.uniontownlabs.org"
-  sed -i 's/apt.uniontownlabs.org/apt.adafruit.com/g' /etc/apt/sources.list
+  sed -i '/apt.uniontownlabs.org/apt.adafruit.com/d' /etc/apt/sources.list
+  echo "deb http://apt.adafruit.com/raspbian/ wheezy main" >> /etc/apt/sources.list
   wget -O - -q https://apt.adafruit.com/apt.adafruit.com.gpg.key | apt-key add -
 fi
