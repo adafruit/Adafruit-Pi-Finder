@@ -3,18 +3,19 @@ var app = require('app'),
     dialog = require('dialog'),
     SSH = require('./ssh.js'),
     BrowserWindow = require('browser-window'),
-    Finder = require('./finder.js');
+    Finder = require('./finder.js'),
+    main, terminal;
 
 exports = module.exports = function(app) {
 
-  var main = new BrowserWindow({
+  main = new BrowserWindow({
     width: 300,
     height: 380,
     resizable: false,
     'use-content-size': true
   });
 
-  var terminal = new BrowserWindow({
+  terminal = new BrowserWindow({
     width: 640,
     height: 384,
     resizable: false,
@@ -59,6 +60,7 @@ exports = module.exports = function(app) {
       config.file_upload = dialog.showOpenDialog(options);
 
       if(! config.file_upload) {
+        main.webContents.send('reset', true);
         return main.webContents.send('status', 'Upload failed.');
       }
 
