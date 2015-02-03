@@ -1,22 +1,21 @@
 {
-  "name": "pi_finder",
+  "name": "pi-finder-atom-shell",
   "version": "2.0.0",
+  "private": true,
   "description": "An atom-shell based utility for finding Raspberry Pis on the local network",
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adafruit/pi_bootstrap"
+    "url": "https://github.com/adafruit/Adafruit-Pi-Finder"
   },
   "author": "Todd Treece <todd@uniontownlabs.org>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/adafruit/pi_bootstrap/issues"
+    "url": "https://github.com/adafruit/Adafruit-Pi-Finder/issues"
   },
-  "homepage": "https://github.com/adafruit/pi_bootstrap",
+  "homepage": "https://github.com/adafruit/Adafruit-Pi-Finder",
   "dependencies": {
-    "async": "^0.9.0",
-    "ip": "^0.3.2",
-    "ssh2": "^0.3.6"
+    "npm": "^2.4.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

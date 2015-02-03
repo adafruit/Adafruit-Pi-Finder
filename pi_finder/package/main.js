@@ -6,12 +6,7 @@ var app = require('app'),
     Finder = require('./finder.js'),
     main, terminal;
 
-// quit app on close
-app.on('window-all-closed', function() {
-  app.quit();
-});
-
-app.on('ready', function() {
+exports = module.exports = function(app) {
 
   main = new BrowserWindow({
     width: 300,
@@ -65,7 +60,8 @@ app.on('ready', function() {
       config.file_upload = dialog.showOpenDialog(options);
 
       if(! config.file_upload) {
-        return main.webContents.send('status', 'Upload failed.');
+        main.webContents.send('reset', false);
+        return main.webContents.send('status', 'Nothing selected to upload.');
       }
 
       config.file_upload = config.file_upload.toString();
@@ -103,7 +99,7 @@ app.on('ready', function() {
 
   });
 
-});
+}
 
 function ssh_connect(config) {
 
