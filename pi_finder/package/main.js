@@ -60,8 +60,8 @@ exports = module.exports = function(app) {
       config.file_upload = dialog.showOpenDialog(options);
 
       if(! config.file_upload) {
-        main.webContents.send('reset', true);
-        return main.webContents.send('status', 'Upload failed.');
+        main.webContents.send('reset', false);
+        return main.webContents.send('status', 'Nothing selected to upload.');
       }
 
       config.file_upload = config.file_upload.toString();
