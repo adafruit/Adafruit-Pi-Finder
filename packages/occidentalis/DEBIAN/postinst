@@ -12,7 +12,8 @@ sed -i /etc/modprobe.d/raspi-blacklist.conf -e "s/^blacklist[[:space:]]*i2c-dev.
 modprobe i2c-dev
 
 if ! grep -Fq "i2c-dev" /etc/modules; then
-  echo -e "i2c-bcm2708\ni2c-dev" >> /etc/modules
+  echo "i2c-bcm2708" >> /etc/modules
+  echo "i2c-dev" >> /etc/modules
 fi
 
 # SAMBA
