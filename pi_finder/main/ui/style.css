@@ -1,0 +1,25 @@
+body {
+  background: #000;
+  color: #fff;
+  font-family: "Courier New", Courier, monospace;
+  text-align: center;
+}
+
+img {
+  display: block;
+  width: 200px;
+  margin: 30px auto;
+}
+
+#status {
+  display: block;
+  text-align: center;
+  width: 90%;
+  margin: 20px auto 0 auto;
+  font-size: 12px;
+}
+
+.hide {
+  display: none !important;
+}
+

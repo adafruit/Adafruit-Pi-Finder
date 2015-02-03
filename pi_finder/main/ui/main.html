@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Auto Update</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+
+    <img src="adafruit.svg">
+    <div id="status"></div>
+
+    <script>
+
+      var ipc = require('ipc'),
+          timer;
+
+      window.$ = window.jQuery = require('./jquery.js');
+
+      $(document).on('ready', function() {
+
+        working('Checking for updates');
+
+      });
+
+      function working(message) {
+
+        var count = 1;
+
+        var t = setInterval(function() {
+
+          if(count > 3) {
+            count = 1;
+          }
+
+          $('#status').html(message + Array(count + 1).join('.'));
+
+          count++;
+
+        }, 500);
+
+        return t;
+
+      }
+
+    </script>
+  </body>
+</html>
+
