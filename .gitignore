@@ -3,8 +3,8 @@
 .DS_Store
 node_modules
 pi_finder/build
-pi_finder/src/*.zip
-pi_finder/src/*.gz
+pi_finder/main/*.zip
+pi_finder/main/*.gz
 
 # debs we build on the fly
 packages/build/occi_*.deb
