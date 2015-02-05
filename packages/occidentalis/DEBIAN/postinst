@@ -16,6 +16,14 @@ if ! grep -Fq "i2c-dev" /etc/modules; then
   echo "i2c-dev" >> /etc/modules
 fi
 
+# i2c for pi 2
+if ! grep -Fq "dtparam=i2c1" /boot/config.txt; then
+  echo "# Turn on i2c (bus #1) for Raspberry Pi 2 and Pi 1 Model A, B (rev 2) and B+." >> /boot/config.txt
+  echo "# If you have a Raspberry Pi Model B rev 1 with the i2c bus 0 instead," >> /boot/config.txt
+  echo "# change this line to dtparam=i2c0=on" >> /boot/config.txt
+  echo "dtparam=i2c1=on" >> /boot/config.txt
+fi
+
 # SAMBA
 if ! grep -Fq "pihome" /etc/samba/smb.conf; then
   cp /etc/samba/smb.conf /etc/samba/smb.conf.backup
