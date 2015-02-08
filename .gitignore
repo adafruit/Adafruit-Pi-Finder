@@ -9,6 +9,7 @@ pi_finder/main/*.gz
 # debs we build on the fly
 packages/build/occi_*.deb
 packages/build/occidentalis_*.deb
+packages/build/adafruit-pitft-helper_*.deb
 
 # generated man pages - see packages/Makefile
 packages/occi/usr/share/man/man1/*.gz
