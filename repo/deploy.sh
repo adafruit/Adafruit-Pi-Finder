@@ -60,6 +60,7 @@ reprepro -V remove wheezy node
 reprepro -V remove wheezy occi
 reprepro -V remove wheezy occidentalis
 reprepro -V remove wheezy adafruitwebide
+reprepro -V remove wheezy adafruit-pitft-helper
 reprepro -V remove wheezy libraspberrypi-dev-adafruit
 reprepro -V remove wheezy libraspberrypi-doc-adafruit
 reprepro -V remove wheezy libraspberrypi-bin-adafruit
