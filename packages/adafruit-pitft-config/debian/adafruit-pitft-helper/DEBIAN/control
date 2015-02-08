@@ -1,0 +1,10 @@
+Package: adafruit-pitft-helper
+Version: 0.0.1-1
+Architecture: armhf
+Maintainer: Brennen Bearnes <bbearnes@gmail.com>
+Installed-Size: 34
+Section: unknown
+Priority: extra
+Homepage: https://github.com/adafruit/Adafruit-PiTFT-Helper
+Description: Configuration helper for Adafruit PiTFT
+ Tools for configuring Adafruit PiTFT modules.
