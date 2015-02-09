@@ -1,0 +1,15 @@
+Source: adafruit-pitft-helper
+Section: utils
+Priority: extra
+Maintainer: Brennen Bearnes <bbearnes@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: https://github.com/adafruit/Adafruit-PiTFT-Helper
+# Vcs-Git: https://github.com/adafruit/Adafruit-PiTFT-Helper.git
+# Vcs-Browser: https://github.com/adafruit/Adafruit-PiTFT-Helper
+
+Package: adafruit-pitft-helper
+Architecture: armhf
+Depends: ${shlibs:Depends}, ${misc:Depends}, evtest, tslib, libts-bin
+Description: Configuration helper for Adafruit PiTFT
+ Tools for configuring Adafruit PiTFT modules.

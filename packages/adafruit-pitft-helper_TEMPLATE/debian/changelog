@@ -1,0 +1,11 @@
+adafruit-pitft-helper (0.0.1-2) unstable; urgency=low
+
+  * Adds non-kernel dependencies
+
+ -- Brennen Bearnes <bbearnes@gmail.com> Mon, 09 Feb 2015 17:16:01 +0000
+
+adafruit-pitft-helper (0.0.1-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Brennen Bearnes <bbearnes@gmail.com>  Fri, 06 Feb 2015 21:42:21 +0000
