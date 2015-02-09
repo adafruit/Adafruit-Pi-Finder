@@ -32,3 +32,6 @@ build/adafruit-pitft-helper_${PITFT_PACKAGE_VERSION}_armhf.deb: ${pitft_stuff}
 	ls -lah adafruit-pitft-helper
 	mv ./adafruit-pitft-helper/*.deb build/
 	rm -r adafruit-pitft-helper
+
+clean:
+	$(RM) build/*
