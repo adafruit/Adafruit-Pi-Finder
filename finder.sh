@@ -1,24 +1,41 @@
 #!/usr/bin/env bash
 
-# Command line options:
+# Command line options:  See usage below
 
-# -u <user>
-#     supply a username (default is `pi`)
 
-# -p <port>
-#     supply an ssh port (default is `22`)
+function usage
+{
+  cat <<-EOF
+  $(basename $0): a simple CLI utility to find a raspberry Pi on the local subnet and do something useful.
 
-# -t
-#    Provide terminal access rather than run the Adafruit installer (default is run the installer)
+  Options:
 
-# -d
-#    Print useful information and exit (replaces `--debug`)  (default is run the installer)
+  -u <user>
+      supply a username (default is \`pi\`)
 
-# -c  <cmd list>
-#    Run some list of commands (place in "")
+  -p <port>
+      supply an ssh port (default is \`22\`)
 
-# -i
-#    Run the Adafruit installer  (default behaviour)
+  -t
+     Provide terminal access rather than run the Adafruit installer
+
+  -d
+     Print useful information and exit
+
+  -c  <cmd list>
+     Run some list of commands (place in "")
+
+  -i
+     Run the Adafruit installer (default behaviour)
+
+  -h
+    get some simple help (this message)
+
+EOF
+
+exit
+
+}
 
 
 
@@ -31,7 +48,7 @@ USER_NAME=pi
 COMMAND='curl -SLs https://apt.adafruit.com/install | sudo bash'
 
 printf "This script will attempt to find a Raspberry Pi on your local network, connect to it "
-while getopts tdu:p:c: opt ; do
+while getopts htdu:p:c: opt ; do
   case $opt in
 
   t)  COMMAND=""  # No command provides shell access
@@ -49,6 +66,8 @@ while getopts tdu:p:c: opt ; do
 
   c)  COMMAND="$OPTARG"
       printf ", and run the command list \"$COMMAND\"\n\n" ;;
+
+  h)  usage ;;
 
   esac
 
