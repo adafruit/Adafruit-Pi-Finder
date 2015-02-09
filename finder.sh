@@ -17,7 +17,7 @@ function usage
       supply an ssh port (default is \`22\`)
 
   -t
-     Provide terminal access rather than run the Adafruit installer
+     Start an interactive terminal
 
   -d
      Print useful information and exit
@@ -26,7 +26,7 @@ function usage
      Run some list of commands (place in "")
 
   -i
-     Run the Adafruit installer (default behaviour)
+     Run the Adafruit Occidentalis bootstrap (default behaviour)
 
   -h
     get some simple help (this message)
@@ -58,7 +58,7 @@ while getopts htdu:p:c: opt ; do
       printf ", and display uptime and network information\n\n" ;;
 
   i)  COMMAND='curl -SLs https://apt.adafruit.com/install | sudo bash'
-      printf ", and run the Adafruit installer.\n\n" ;;
+      printf ", and start the bootstrap.\n\n" ;;
 
   u)  USER_NAME=$OPTARG ;;
 
