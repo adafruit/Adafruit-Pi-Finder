@@ -1,17 +1,60 @@
 #!/usr/bin/env bash
 
+# Command line options:
+
+# -u <user>
+#     supply a username (default is `pi`)
+
+# -p <port>
+#     supply an ssh port (default is `22`)
+
+# -t
+#    Provide terminal access rather than run the Adafruit installer (default is run the installer)
+
+# -d
+#    Print useful information and exit (replaces `--debug`)  (default is run the installer)
+
+# -c  <cmd list>
+#    Run some list of commands (place in "")
+
+# -i
+#    Run the Adafruit installer  (default behaviour)
+
+
 
 # we haven't found the IP yet
 IP=""
 SSH_PORT=22
 
-NO_OP=0
-if [ "$1" == "--debug" ]; then
-  NO_OP=1
-  echo "Debugging - will just find Raspberry Pi and print uptime."
-else
-  printf "This script will attempt to find a Raspberry Pi on your local network, connect to it, and start the bootstrap.\n\n"
-fi
+
+USER_NAME=pi
+COMMAND='curl -SLs https://apt.adafruit.com/install | sudo bash'
+
+printf "This script will attempt to find a Raspberry Pi on your local network, connect to it "
+while getopts tdu:p:c: opt ; do
+  case $opt in
+
+  t)  COMMAND=""  # No command provides shell access
+      printf ", and provide a shell prompt.\n\n" ;;
+
+  d)  COMMAND=$'printf "\nHostname: %s\nUptime: %s\n\n%s\n" $(hostname) "$(uptime)" "$(/sbin/ifconfig)"'
+      printf ", and display uptime and network information\n\n" ;;
+
+  i)  COMMAND='curl -SLs https://apt.adafruit.com/install | sudo bash'
+      printf ", and run the Adafruit installer.\n\n" ;;
+
+  u)  USER_NAME=$OPTARG ;;
+
+  p)  SSH_PORT=$OPTARG ;;
+
+  c)  COMMAND="$OPTARG"
+      printf ", and run the command list \"$COMMAND\"\n\n" ;;
+
+  esac
+
+done
+
+printf "Username is \"$USER_NAME\"\n\n"
 
 # check if we are using the GNU version of the utils
 if date --version >/dev/null 2>&1; then
@@ -83,7 +126,7 @@ if [[ "$IP" == "" ]]; then
 fi
 
 printf "\nAttempting to connect to the Raspberry Pi found @ $IP\n"
-printf "Please enter the default password of ${BOLD}raspberry${NORMAL} when prompted.\n"
+printf "Please enter the password when prompted. The default is ${BOLD}raspberry${NORMAL}\n"
 
 # try to check if the ssh port is open on the target pi
 HAS_SSH=0
@@ -100,12 +143,8 @@ fi
 
 if [ $HAS_SSH -eq 0 ]; then
   printf "\nThe system at ${IP} doesn't seem to be accepting connections on port ${SSH_PORT}."
-  printf "\nIs SSH enabled on the Raspberry Pi?\n"
+  printf "\nDoes the Raspbery Pi have SSH enabled on port ${SSH_PORT}?\n"
   exit 1
 fi
 
-if [ $NO_OP -eq 1 ]; then
-  ssh -t -p $SSH_PORT pi@$IP 'uptime'
-else
-  ssh -t pi@$IP 'curl -SLs https://apt.adafruit.com/install | sudo bash'
-fi
+ssh -t -p $SSH_PORT $USER_NAME@$IP  "$COMMAND"
