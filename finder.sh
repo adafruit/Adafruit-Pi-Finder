@@ -67,7 +67,8 @@ while getopts htdu:p:c: opt ; do
   c)  COMMAND="$OPTARG"
       printf ", and run the command list \"$COMMAND\"\n\n" ;;
 
-  h)  usage ;;
+  h)  printf ", and start the bootstrap by default.\n\n"
+      usage ;;
 
   esac
 
