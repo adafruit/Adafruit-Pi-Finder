@@ -11,6 +11,9 @@ packages/build/occi_*.deb
 packages/build/occidentalis_*.deb
 packages/build/adafruit-pitft-helper_*.deb
 
+# temporary directories
+packages/adafruit-pitft-helper
+
 # generated man pages - see packages/Makefile
 packages/occi/usr/share/man/man1/*.gz
 packages/occidentalis/usr/share/doc/occidentalis/changelog.gz
