@@ -1,6 +1,6 @@
 # Adafruit Raspberry Pi Finder
 
-This set of utilities is intended to work with the [latest version of Raspbian][1],
+The Pi Finder is intended to work with the [latest version of Raspbian][1],
 so please make sure you have installed Raspbian on your SD card before continuing.
 
 You have your brand new Raspberry Pi, and you are ready to get hacking...  Only
@@ -11,7 +11,7 @@ cross-platform application to locate your Raspberry Pi's IP address.
 But it doesn't end there... Order now and you'll also get the bootstrapping
 functionality! That's right, the Pi Finder will ssh into the fresh new Pi,
 update it, set up the wifi SSID and password, set a custom hostname of your
-choice, and install [Occidentalis][occidentalis], a collection of really handy
+choice, and install Occidentalis, a collection of really handy
 software for you:
 
   * apt-get update (grabs information on the newest versions of packages)
@@ -26,6 +26,9 @@ software for you:
 And, as a bonus, a handy tool we wrote called **occi** - which will let you
 change the hostname and wifi details by plugging the SD card into any computer
 and editing the `/boot/occidentalis.txt` file (see below).
+
+Looking for code? Occidentalis is maintained [as its own GitHub
+repository][occidentalis].
 
 ## Finding the Pi & Starting the Bootstrap
 
@@ -87,6 +90,9 @@ with:
 sudo occi
 ```
 
+Looking for code? occi is maintained [in its own GitHub repository][occi].
+
 [1]: http://www.raspberrypi.org/downloads/
 [2]: https://github.com/adafruit/Adafruit-Pi-Finder/releases/latest
 [occidentalis]: https://github.com/adafruit/Adafruit-Occidentalis
+[occi]: https://github.com/adafruit/Adafruit-Occi
