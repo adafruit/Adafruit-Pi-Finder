@@ -30,6 +30,8 @@ and editing the `/boot/occidentalis.txt` file (see below).
 Looking for code? Occidentalis is maintained [as its own GitHub
 repository][occidentalis].
 
+**Note:** This project shares a coincidental name with the Pi Finder by Ivan X, a lovely Mac OS X utility that also helps locate a headless Raspberry Pi on your local network. Please visit [http://ivanx.com/raspberrypi/](http://ivanx.com/raspberrypi/) for the other Pi Finder and other fine Raspberry Pi tutorials and projects!
+
 ## Finding the Pi & Starting the Bootstrap
 
 **Please remember that this is beta software, and _may be glitchy_. We'd
