@@ -18,7 +18,8 @@ module.exports = function(grunt) {
     rename: {
       mac: {
         files: [
-          { src: ['../build/darwin/atom-shell/Atom.app'], dest: '../build/darwin/atom-shell/Pi Bootstrap.app' }
+          { src: ['../build/darwin/atom-shell/Atom.app'], dest: '../build/darwin/atom-shell/Pi Bootstrap.app' },
+          { src: ['../build/darwin/atom-shell/Pi Bootstrap.app/Contents/MacOS/Atom'], dest: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/MacOS/Pi Bootstrap' }
         ]
       },
       linux: {
@@ -45,18 +46,11 @@ module.exports = function(grunt) {
         ]
       }
     },
-    plistbuddy: {
-      bundleDisplay: {
-        method: 'Set',
-        entry: ':CFBundleDisplayName',
-        value: 'Pi Bootstrap',
-        src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
-      },
-      bundleName: {
-        method: 'Set',
-        entry: ':CFBundleName',
-        value: 'Pi Bootstrap',
-        src: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
+    sed: {
+      bundle: {
+        pattern: '<string>Atom</string>',
+        replacement: '<string>Pi Bootstrap</string>',
+        path: '../build/darwin/atom-shell/Pi Bootstrap.app/Contents/Info.plist'
       }
     },
     winresourcer: {
@@ -139,13 +133,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-rename');
-  grunt.loadNpmTasks('grunt-plistbuddy');
+  grunt.loadNpmTasks('grunt-sed');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('winresourcer');
   grunt.loadNpmTasks('grunt-chmod');
   grunt.loadNpmTasks('grunt-contrib-symlink');
 
   grunt.registerTask('default', ['clean:all', 'build-atom-shell-app', 'clean:symlink', 'symlink']);
-  grunt.registerTask('build', ['clean:all', 'build-atom-shell-app', 'rename', 'copy', 'chmod', 'plistbuddy', 'winresourcer', 'compress']);
+  grunt.registerTask('build', ['clean:all', 'build-atom-shell-app', 'rename', 'copy', 'chmod', 'sed', 'winresourcer', 'compress']);
 
 };

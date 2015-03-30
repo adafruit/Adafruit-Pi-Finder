@@ -26,7 +26,7 @@
     "grunt-contrib-copy": "^0.7.0",
     "grunt-contrib-rename": "0.0.3",
     "grunt-contrib-symlink": "^0.3.0",
-    "grunt-plistbuddy": "^0.1.1",
+    "grunt-sed": "^0.1.1",
     "winresourcer": "^0.9.0"
   }
 }
