@@ -10,7 +10,7 @@ app.on('ready', function() {
 
   npm.load(function() {
 
-    npm.commands.install(__dirname, ['adafruit-pi-finder@latest'], function(err) {
+    npm.commands.install(__dirname, ['adafruit-pi-finder@stable'], function(err) {
 
       if(err) {
         return dialog.showErrorBox('ERROR', 'Pi Finder auto update failed! Are you connected to the internet?');
