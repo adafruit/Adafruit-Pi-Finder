@@ -34,6 +34,12 @@ function Finder(options) {
 
 proto.ip = false;
 proto.subnet = false;
+proto.whitelist = [
+  /b8:27:eb/, // rasberry pi ethernet
+  /00:e0:4c/, // realtek
+  /00:14:78/, // tp-link
+  /00:0c:43/  // ralink
+];
 
 proto.start = function(cb) {
 
@@ -67,8 +73,12 @@ proto.arp = function(host, next) {
       return next();
     }
 
-    if(/b8:27:eb/.test(mac)) {
-      return next(null, host);
+    for(var i=0; i < this.whitelist.length; i++) {
+
+      if(this.whitelist[i].test(mac)) {
+        return next(null, host);
+      }
+
     }
 
     next();
