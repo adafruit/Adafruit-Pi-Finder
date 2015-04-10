@@ -13,7 +13,10 @@ function ping(address, cb) {
     p = spawn('/sbin/ping', ['-o', '-t 1', '-c 1', address]);
   }
 
-  p.on('exit', function(code) {
+  if(! p)
+    return cb();
+
+  p.once('exit', function(code) {
     cb();
   });
 

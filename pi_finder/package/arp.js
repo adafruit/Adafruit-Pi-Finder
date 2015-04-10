@@ -22,6 +22,9 @@ function linux(ip, cb) {
   var arp = spawn('arp', [ '-n', ip ]),
       buffer = '';
 
+  if(! arp)
+    return cb('arp failed');
+
   arp.stdout.on('data', function (data) {
     buffer += data;
   });
@@ -49,6 +52,9 @@ function windows(ip, cb) {
 
   var arp = spawn('arp', ['-a', ip]),
       buffer = '';
+
+  if(! arp)
+    return cb('arp failed');
 
   arp.stdout.on('data', function(data) {
     buffer += data;
@@ -82,6 +88,9 @@ function mac(ip, cb) {
 
   var arp = spawn('arp', ['-n', ip]),
       buffer = '';
+
+  if(! arp)
+    return cb('arp failed');
 
   arp.stdout.on('data', function(data) {
     buffer += data;

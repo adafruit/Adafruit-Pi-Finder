@@ -43,8 +43,9 @@ proto.whitelist = [
 
 proto.start = function(cb) {
 
-  async.times(
+  this.timesLimit(
     255,
+    25,
     this.ping.bind(this),
     this.finish.bind(this, cb)
   );
@@ -108,5 +109,17 @@ proto.finish = function(cb, err, ips) {
   }
 
   cb(null, results);
+
+};
+
+proto.timesLimit = function(count, limit, iterator, callback) {
+
+  var counter = [];
+
+  for(var i=0; i < count; i++) {
+    counter.push(i);
+  }
+
+  return async.mapLimit(counter, limit, iterator, callback);
 
 };
