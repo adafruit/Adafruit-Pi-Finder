@@ -1,4 +1,5 @@
 var ip = require('ip'),
+    os  = require('os')
     events = require('events'),
     util = require('util'),
     ping = require('./ping.js'),
@@ -42,14 +43,44 @@ proto.whitelist = [
 ];
 
 proto.start = function(cb) {
+  //get all interfaces
+  var interfaces = os.networkInterfaces();
+  var subnets = [];
+  //pull out subnets for IPv4 interfaces only
+  for(var name in interfaces) {
+    var ifc = interfaces[name];
+    for(var i=0; i<ifc.length; i++) {
+      if(ifc[i].family == 'IPv4') {
+        subnets.push(ifc[i].address);
+      }
+    }
+  }
+  //filter out loopback
+  subnets = subnets.filter(function(n) { return n !== '127.0.0.1'; });
+  this.total_ips = [];
+  this.doSubnet(subnets,cb);
+};
 
+//recursive function to process each subnet
+proto.doSubnet = function(subnets,cb) {
+  var addr = subnets.shift();
+  this.subnet = addr.substr(0, addr.lastIndexOf('.')) || false;
+  var self = this;
   this.timesLimit(
-    255,
-    25,
-    this.ping.bind(this),
-    this.finish.bind(this, cb)
+      255,
+      25,
+      this.ping.bind(this),
+      function(err,ips) {
+        if(Array.isArray(ips)) {
+          self.total_ips = self.total_ips.concat(ips);
+        }
+        if(subnets.length > 0) {
+          self.doSubnet(subnets, cb);
+        } else {
+          self.finish(cb,err,self.total_ips);
+        }
+      }
   );
-
 };
 
 proto.ping = function(position, next) {
