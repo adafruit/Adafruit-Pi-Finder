@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>SSH Terminal</title>
+    <style>
+      html {
+        background: #010;
+        font-family: courier;
+      }
+      .terminal {
+        width: 630px;
+        height: 450px;
+        border: none;
+      }
+      .terminal-cursor {
+        color: #000;
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      var ipc = require('ipc'),
+          Terminal = require('./term.js'),
+          timer;
+
+      var term = new Terminal({
+        cols: 80,
+        rows:31,
+        screenKeys: true,
+        useStyle: true,
+        cursorBlink: true
+      });
+
+      term.on('data', function(data) {
+        ipc.send('stdin', data);
+      });
+
+      term.on('title', function(title) {
+        document.title = title;
+      });
+
+      term.open(document.body);
+
+      ipc.on('stdout', function(data) {
+        term.write(data);
+      });
+
+      ipc.on('stderr', function(data) {
+        term.write(data);
+      });
+
+      ipc.on('disconnect', function() {
+        ipc.send('disconnect', true);
+        term.reset();
+      });
+
+    </script>
+
+  </body>
+
+</html>
