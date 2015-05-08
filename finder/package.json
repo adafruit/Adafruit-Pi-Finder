@@ -1,7 +1,7 @@
 {
   "name": "adafruit-pi-finder",
-  "version": "2.2.0",
-  "description": "An atom-shell based utility for finding Raspberry Pis on your local network",
+  "version": "2.2.1",
+  "description": "An electron based utility for finding Raspberry Pis on your local network",
   "main": "main.js",
   "repository": {
     "type": "git",
@@ -16,6 +16,6 @@
   "dependencies": {
     "async": "^0.9.0",
     "ip": "^0.3.2",
-    "ssh2": "^0.3.6"
+    "ssh2": "^0.4.8"
   }
 }

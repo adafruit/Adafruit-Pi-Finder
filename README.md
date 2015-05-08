@@ -51,7 +51,7 @@ need to be able to connect to the Pi the first time around.
 your security settings, you can right click on the app and click Open to bypass
 the warnings*
 
-[Download the latest release][2] of the Pi Bootstrap utility.
+[Download the latest release][2] of the Pi Finder utility.
 
 ### Bootstrap via CLI on Linux or Mac:
 
