@@ -2,19 +2,4 @@
 *.swo
 .DS_Store
 node_modules
-pi_finder/build
-pi_finder/main/*.zip
-pi_finder/main/*.gz
-
-# debs we build on the fly
-packages/build/occi_*.deb
-packages/build/occidentalis_*.deb
-packages/build/adafruit-pitft-helper_*.deb
-
-# temporary directories
-packages/adafruit-pitft-helper
-
-# generated man pages - see packages/Makefile
-packages/occi/usr/share/man/man1/*.gz
-packages/occidentalis/usr/share/doc/occidentalis/changelog.gz
-packages/occi/usr/share/doc/occi/changelog.gz
+build/*
