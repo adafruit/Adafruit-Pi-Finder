@@ -69,11 +69,14 @@
 
         });
 
-        $('#connect').click(function() {
+        $('#connect').click(function(e) {
 
           $('#ssh, #options').addClass('hide');
 
           var options = get_ssh();
+
+          if (e.shiftKey)
+            options.grayscale = true;
 
           ipc.send('connect', options);
 

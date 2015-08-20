@@ -70,6 +70,10 @@ exports = module.exports = function(app) {
 
     terminal.show();
     terminal.focus();
+
+    if(config.grayscale)
+      terminal.webContents.send('grayscale');
+
     main.setSize(300, 380);
 
     main.webContents.send('working', 'Connecting');

@@ -1,6 +1,6 @@
 {
   "name": "PiFinder",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "private": true,
   "description": "An electron based utility for finding Raspberry Pis on the local network",
   "main": "main.js",
@@ -13,5 +13,8 @@
   "bugs": {
     "url": "https://github.com/adafruit/Adafruit-Pi-Finder/issues"
   },
-  "homepage": "https://github.com/adafruit/Adafruit-Pi-Finder"
+  "homepage": "https://github.com/adafruit/Adafruit-Pi-Finder",
+  "dependencies": {
+    "npm": "^2.13.5"
+  }
 }

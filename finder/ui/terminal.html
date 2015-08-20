@@ -28,8 +28,7 @@
           timer;
 
       var term = new Terminal({
-        cols: 80,
-        rows:31,
+        geometry:[81, 27],
         screenKeys: true,
         style: true,
         cursorBlink: true
@@ -44,6 +43,29 @@
       });
 
       term.open(document.body);
+
+      ipc.on('grayscale', function() {
+
+        term.colors = [
+          '#000000',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff',
+          '#ffffff'
+        ];
+
+      });
 
       ipc.on('stdout', function(data) {
         term.write(data);
