@@ -39,7 +39,8 @@ proto.whitelist = [
   /b8:27:eb/, // rasberry pi ethernet
   /00:e0:4c/, // realtek
   /00:14:78/, // tp-link
-  /00:0c:43/  // ralink
+  /00:0c:43/, // ralink,
+  /00:c0:ca/  // alfa
 ];
 
 proto.start = function(cb) {

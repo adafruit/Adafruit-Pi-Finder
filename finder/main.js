@@ -150,6 +150,7 @@ function ssh_connect(config) {
     if(terminal.isVisible()) {
       terminal.close();
       main.focus();
+      main.webContents.send('status', 'Connection closed.');
     }
 
   });

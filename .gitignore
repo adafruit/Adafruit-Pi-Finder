@@ -2,4 +2,6 @@
 *.swo
 .DS_Store
 node_modules
-build/*
+wrapper/cache
+wrapper/release
+build
