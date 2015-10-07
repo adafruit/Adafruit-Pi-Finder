@@ -1,6 +1,6 @@
 {
   "name": "adafruit-pi-finder",
-  "version": "2.3.1",
+  "version": "2.4.1",
   "description": "An electron based utility for finding Raspberry Pis on your local network",
   "main": "main.js",
   "repository": {
