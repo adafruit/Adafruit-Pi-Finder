@@ -1,4 +1,4 @@
-var app = require('app');
+const {app} = require('electron');
 
 app.on('window-all-closed', function() {
   app.quit();
