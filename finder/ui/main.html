@@ -39,8 +39,8 @@
 
     <script>
 
-      var ipc = require('ipc'),
-          timer;
+      const {ipcRenderer} = require('electron');
+      var timer;
 
       window.$ = window.jQuery = require('./jquery.js');
 
@@ -48,7 +48,7 @@
 
         $('#find').click(function() {
           $(this).addClass('hide');
-          ipc.send('find');
+          ipcRenderer.send('find');
         });
 
         $('#bootstrap').click(function() {
@@ -65,7 +65,7 @@
           options.pi_config = get_options();
           options.type = 'bootstrap';
 
-          ipc.send('connect', options);
+          ipcRenderer.send('connect', options);
 
         });
 
@@ -78,7 +78,7 @@
           if (e.shiftKey)
             options.grayscale = true;
 
-          ipc.send('connect', options);
+          ipcRenderer.send('connect', options);
 
         });
 
@@ -89,7 +89,7 @@
           var options = get_ssh();
           options.type = 'upload';
 
-          ipc.send('connect', options);
+          ipcRenderer.send('connect', options);
 
         });
 
@@ -99,13 +99,13 @@
 
           options.type = 'shutdown';
 
-          ipc.send('connect', options);
+          ipcRenderer.send('connect', options);
 
         });
 
       });
 
-      ipc.on('reset', function(not_found) {
+      ipcRenderer.on('reset', function(not_found) {
 
         if(not_found) {
 
@@ -124,7 +124,7 @@
 
       });
 
-      ipc.on('found', function(arg) {
+      ipcRenderer.on('found', function(e, arg) {
 
         if(timer) {
           clearInterval(timer);
@@ -142,7 +142,7 @@
 
       });
 
-      ipc.on('working', function(data) {
+      ipcRenderer.on('working', function(e,data) {
 
         if(timer) {
           clearInterval(timer);
@@ -153,7 +153,7 @@
 
       });
 
-      ipc.on('status', function(arg) {
+      ipcRenderer.on('status', function(e,arg) {
 
         if(timer) {
           clearInterval(timer);

@@ -23,8 +23,8 @@
 
   <body>
     <script>
-      var ipc = require('ipc'),
-          Terminal = require('./term.js'),
+      const {ipcRenderer} = require('electron');
+      var Terminal = require('./term.js'),
           timer;
 
       var term = new Terminal({
@@ -35,7 +35,7 @@
       });
 
       term.on('data', function(data) {
-        ipc.send('stdin', data);
+        ipcRenderer.send('stdin', data);
       });
 
       term.on('title', function(title) {
@@ -44,7 +44,7 @@
 
       term.open(document.body);
 
-      ipc.on('grayscale', function() {
+      ipcRenderer.on('grayscale', function() {
 
         term.colors = [
           '#000000',
@@ -67,16 +67,16 @@
 
       });
 
-      ipc.on('stdout', function(data) {
+      ipcRenderer.on('stdout', function(e, data) {
         term.write(data);
       });
 
-      ipc.on('stderr', function(data) {
+      ipcRenderer.on('stderr', function(e, data) {
         term.write(data);
       });
 
-      ipc.on('disconnect', function() {
-        ipc.send('disconnect', true);
+      ipcRenderer.on('disconnect', function() {
+        ipcRenderer.send('disconnect', true);
         term.reset();
       });
 
