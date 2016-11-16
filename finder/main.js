@@ -1,9 +1,6 @@
-var app = require('app'),
-    ipc = require('ipc'),
-    dialog = require('dialog'),
-    SSH = require('./ssh.js'),
-    BrowserWindow = require('browser-window'),
-    Finder = require('./finder.js'),
+const {app, ipcMain, dialog, BrowserWindow} = require('electron');
+var SSH = require('./ssh.js'),
+    Finder = require('./finder'),
     main, terminal;
 
 exports = module.exports = function(app) {
@@ -23,8 +20,8 @@ exports = module.exports = function(app) {
     'use-content-size': true
   });
 
-  main.loadUrl('file://' + __dirname + '/ui/main.html');
-  terminal.loadUrl('file://' + __dirname + '/ui/terminal.html');
+  main.loadURL('file://' + __dirname + '/ui/main.html');
+  terminal.loadURL('file://' + __dirname + '/ui/terminal.html');
 
   main.on('closed', function() {
 
@@ -48,7 +45,7 @@ exports = module.exports = function(app) {
 
   });
 
-  ipc.on('connect', function(e, config) {
+  ipcMain.on('connect', function(e, config) {
 
     if(config.type == 'upload') {
 
@@ -82,7 +79,7 @@ exports = module.exports = function(app) {
 
   });
 
-  ipc.on('find', function(e, arg) {
+  ipcMain.on('find', function(e, arg) {
 
     var finder = Finder();
 
@@ -109,13 +106,13 @@ function ssh_connect(config) {
 
   var ssh = SSH(config);
 
-  ipc.on('stdin', function(e, data) {
+  ipcMain.on('stdin', function(e, data) {
     if(ssh) {
       ssh.write(data);
     }
   });
 
-  ipc.on('disconnect', function() {
+  ipcMain.on('disconnect', function() {
     if(ssh) {
       ssh.end();
     }
