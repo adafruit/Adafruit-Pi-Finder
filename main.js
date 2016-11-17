@@ -1,7 +1,12 @@
 const {app, ipcMain, dialog, BrowserWindow} = require('electron');
 var SSH = require('./ssh.js'),
-    Finder = require('./finder'),
     main, terminal;
+
+const Subnet = require('./lib/subnet');
+const Scan = require('./lib/scan');
+const Arp = require('./lib/arp');
+const Filter = require('./lib/filter');
+const Hostname = require('./lib/hostname');
 
 exports = module.exports = function(app) {
 
@@ -81,17 +86,26 @@ exports = module.exports = function(app) {
 
   ipcMain.on('find', function(e, arg) {
 
-    var finder = Finder();
+    const subnet = new Subnet();
+    const scan = new Scan();
+    const arp = new Arp();
+    const filter = new Filter();
+    const hostname = new Hostname();
+
+    const stream = subnet.pipe(scan).pipe(arp).pipe(filter).pipe(hostname);
 
     main.webContents.send('working', 'Searching');
 
-    finder.start(function(err, ip) {
+    let ips = [];
+    stream.on('data', host => ips.push(host.ip));
 
-      if(!ip) {
+    stream.on('end', () => {
+
+      if(!ips.length) {
         return main.webContents.send('reset', true);
       }
 
-      main.webContents.send('found', ip);
+      main.webContents.send('found', ips);
       main.setSize(500, 550);
       main.focus();
       main.center();
