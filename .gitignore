@@ -41,3 +41,4 @@ app/style.css.map
 dist
 main.js
 main.js.map
+*.swp
