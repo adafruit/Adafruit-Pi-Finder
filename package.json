@@ -15,7 +15,9 @@
   "homepage": "https://github.com/adafruit/Adafruit-Pi-Finder",
   "dependencies": {
     "async": "^2.1.2",
+    "evilscan": "github:toddtreece/evilscan#master",
     "ip": "^1.1.4",
+    "netmask": "^1.0.6",
     "ssh2": "^0.5.4"
   }
 }
